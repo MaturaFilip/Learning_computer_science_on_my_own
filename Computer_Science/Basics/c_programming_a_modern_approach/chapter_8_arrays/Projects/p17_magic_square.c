@@ -15,9 +15,30 @@ int main(void) {
     printf("Enter size of magic square: ");
     scanf("%d", &n);
 
-    // 1 should in in middle of first row
+    if ((n % 2) == 0) {
+        printf("Only odd number allowed\n");
+        return 1;
+    }
 
-    // 
+    int arr[n][n];
+
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            arr[i][j] = 0;
+        }
+    }
+
+
+    // 1 should in in middle of first row
+    arr[0][n/2] = 1;
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d", arr[i][j]);
+        }
+        printf("\n");
+    }
 
     printf("\n");
     return 0;
