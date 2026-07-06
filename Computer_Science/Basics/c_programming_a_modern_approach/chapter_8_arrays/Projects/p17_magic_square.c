@@ -32,10 +32,44 @@ int main(void) {
 
     // 1 should in in middle of first row
     arr[0][n/2] = 1;
-    
+    int pos_1 = 0;
+    int pos_2 = n / 2;
+    int next_1 = 0;
+    int next_2 = 0;
+    int num = 2;
+
+    while (num <= (n * n) ) {
+        
+        if ((pos_1 - 1) < 0) {
+            next_1 = n - 1;
+        } else {
+            next_1 = pos_1 - 1;
+        }
+
+        if ((pos_2 + 1) >= n) {
+            next_2 = 0;
+        } else {
+            next_2 = pos_2 + 1;
+        }
+
+        if (arr[next_1][next_2] == 0) {
+            arr[next_1][next_2] = num;
+            pos_1 = next_1;
+            pos_2 = next_2;
+        } else {
+            arr[pos_1 + 1][pos_2] = num;
+            pos_1 = pos_1 + 1;
+        }
+
+        // update 
+        num++;
+    }
+
+
+    // print solved array
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            printf("%d", arr[i][j]);
+            printf("%d ", arr[i][j]);
         }
         printf("\n");
     }
