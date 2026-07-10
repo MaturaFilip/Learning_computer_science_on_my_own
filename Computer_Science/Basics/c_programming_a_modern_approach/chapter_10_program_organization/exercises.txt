@@ -1,0 +1,75 @@
+####################xx
+1) List all variable and parameter names visible in that scope
+
+int a;
+
+void f(int b) {
+    int c;
+}
+
+void g(void) {
+    int d;
+    {
+    int e;
+    }
+}
+
+int main(void) {
+    int f;
+}
+
+a) the "f" function --> a, b, c
+b) the "g" function --> a, d
+c) the block in which "e" is declared --> a, d, e
+d) the "main" function --> a, f
+
+
+################################
+2) List all variable and parameter names visibile in that scope + more than one variable or parameter with the same name, indicate which one is visible
+
+int b, c;
+
+void f(void) {
+    int b, d;
+}
+
+void g(int a) {
+    int c;
+    {
+    int a, d;
+    }
+}
+
+int main(void) {
+    int c, d;
+}
+
+a) the "f" function --> b = more times => b declared inside f function is visible, c, d
+b) the "g" function --> b, c = more times => c declared inside g function is visible, a
+c) the block in which "a" and "d" are declared --> b, c = more times => c declared inside the g function is visible, a => visible inside the inner scope, d
+d) the "main" function --> b, d, c = more times => c declared inside the main function is visible
+
+
+####################
+3) Suppose that a program has only one function "main". How many different variables named "i" could this program contain?
+
+- infinite, because you can create as many scopes you want inside main function. So external, local and also inside the inner scopes example below:
+
+#include <stdio.h>
+
+int i;
+
+int main(void) {
+    printf("%d\n", i);      // 0
+    int i;
+    i = 2;
+    printf("%d\n", i);      // 2
+
+    {
+        int i;
+        i = 3;
+        printf("%d\n", i);  // 3
+    }
+    printf("%d\n", i);      // 2
+    return 0;
+}
