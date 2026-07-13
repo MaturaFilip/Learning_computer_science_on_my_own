@@ -1,3 +1,3 @@
-[nand](nand_god.png)
+![nand](nand_god.png)
 
 
