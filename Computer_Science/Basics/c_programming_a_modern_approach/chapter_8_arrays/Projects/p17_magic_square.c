@@ -4,9 +4,6 @@
 #include <stdbool.h>
 
 
-#define LEN ((int) (sizeof(counter) / sizeof(counter[0])))
-
-
 int main(void) {
     int n;
 

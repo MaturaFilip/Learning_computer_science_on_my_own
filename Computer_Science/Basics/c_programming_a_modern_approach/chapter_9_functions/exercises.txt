@@ -1,0 +1,290 @@
+9) What is the output of this code:
+
+#include <stdio.h>
+void swap(int a, int b);
+int main()
+{
+    int i = 1, j = 2;
+    swap(i, j);
+    printf("i = %d, j = %d", i, j);
+
+    return 0;
+}
+
+void swap(int a, int b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+--> Output is i = 1, j = 2, because i and j is passed to function as value
+
+
+################################
+10) Create functions to calculate largest number, avg and positive numbers in an array.
+
+#include <stdio.h>
+int largest(int n, int a[n]);
+int avg(int n, int a[n]);
+int num_positives(int n, int a[n]);
+int main()
+{
+    int a[] = {1, 2, 3, 4, 5};
+    printf("largest = %d\n", largest(5, a));
+    printf("avg = %d\n", avg(5, a));
+    printf("positives = %d\n", num_positives(5, a));
+
+    return 0;
+}
+
+int largest(int n, int a[n]) {
+    int l = a[0];
+    for (int i = 1; i < n; i++) {
+        if (a[i] > l) {
+            l = a[i];
+        }
+    }
+    return l;
+}
+
+int avg(int n, int a[n]) {
+    int counter = 0;
+    for (int i = 0; i < n; i++) {
+        counter += a[i];
+    }
+    return counter / n;
+}
+
+int num_positives(int n, int a[n]) {
+    int pos = 0;
+    for (int i = 0; i < n; i++) {
+        if (a[i] > 0) {
+            pos += 1;
+        }
+    }
+    return pos;
+}
+
+####################################
+
+11) Calculate GPA score based on grades
+
+#include <stdio.h>
+#include <ctype.h>
+float compute_GPA(int len, char grades[len]);
+int main()
+{
+    char grad[] = {'A', 'A', 'F'};
+    printf("GPA = %f", compute_GPA(3, grad));
+
+    return 0;
+}
+
+float compute_GPA(int len, char grades[len]) {
+    int counter = 0;
+    for (int i = 0; i < len; i++) {
+        switch (toupper(grades[i])) {
+            case 'A':
+                counter += 4;
+                break;
+            case 'B':
+                counter += 3;
+                break;
+            case 'C':
+                counter += 2;
+                break;
+            case 'D':
+                counter += 1;
+                break;
+            case 'F':
+                counter += 0;
+                break;
+
+        }
+    }
+    return (float) counter / len;
+}
+
+###################################
+
+12) Calculate inner product
+
+#include <stdio.h>
+double inner_product(int n, double a[n], double b[n]);
+int main()
+{
+    double a[3] = {1, 2, 3};
+    double b[3] = {1, 2, 3};
+    printf("inner product = %f", inner_product(3, a, b));
+
+    return 0;
+}
+
+double inner_product(int n, double a[n], double b[]) {
+    int total = 0;
+    for (int i = 0; i < n; i++) {
+        total += a[i] * b[i];
+    }
+    return total;
+}
+
+#######################################
+
+13) Write a function that calculate difference between white and black pieces on the chess board (different pieces = different points)
+#include <stdio.h>
+#include <ctype.h>
+#define CHESS_BOARD_LEN 8
+int evaluate_position(char board[8][8]);
+int points_for_piece(char piece);
+int main()
+{
+    char board[8][8] = {
+        {'Q', '0', 'R', '0', '0', 'N', '0', '0'},
+        {'0', '0', '0', 'P', '0', '0', '0', '0'},
+        {'0', '0', 'P', '0', '0', '0', '0', '0'},
+        {'0', '0', '0', '0', '0', '0', '0', '0'},
+        {'0', 'P', '0', '0', '0', '0', '0', '0'},
+        {'0', 'p', 'P', '0', '0', 'p', '0', '0'},
+        {'0', '0', '0', '0', '0', '0', '0', '0'},
+        {'0', '0', '0', '0', 'r', 'q', '0', '0'}
+    };
+    printf("the difference between white and black pieces is = %d", evaluate_position(board));
+    
+
+    return 0;
+}
+
+int evaluate_position(char board[8][8]) {
+    int difference = 0;
+    for (int i = 0; i < CHESS_BOARD_LEN; i++) {
+        for (int j = 0; j < CHESS_BOARD_LEN; j++) {
+            if (isupper(board[i][j]) && isalpha(board[i][j])) {
+                difference += points_for_piece(board[i][j]);
+            } else if (islower(board[i][j]) && isalpha(board[i][j])) {
+                difference -= points_for_piece(board[i][j]);
+            } else {
+                continue;
+            }
+        }
+    }
+    return difference;
+}
+
+int points_for_piece(char piece) {
+    switch (toupper(piece)) {
+        case 'Q':
+            return 9; 
+        case 'R':
+            return 5;
+        case 'B':
+            return 3;
+        case 'N':
+            return 3;
+        case 'P':
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+############################################
+
+14) Function below should return true if any element of the array has the value 0 ad false if all element are non-zero. Find a bug.
+
+bool has_zero(int n, int a[]) {
+
+    for (int i = 0; i < n; i++) {
+        if (a[i] == 0) {
+            return true;
+        } else {
+            return false;   
+        }
+    }
+}
+
+--> The problem with this function is, that it terminate after first element is checked. For instance if first element is 1, then the function return false, without checking other elements in array a.
+
+#####################################################
+15) Rewrite function that takes 3 double and return median (original function have 6 return)
+
+#include <stdio.h>
+#include <math.h>
+double median(double x, double y, double z);
+int main()
+{
+    printf("%f", median(9, 1, 8));
+
+    return 0;
+}
+
+double median(double x, double y, double z) {
+    return fmax(fmin(x, y), fmin(fmax(x, y), z));
+}
+
+##############################
+16) Condense the "fact" function as "power" function in this chapter
+
+"power" function:
+
+int power(int x, int n)
+{
+return n == 0 ? 1 : x * power(x, n - 1);
+}
+
+original "fact" function:
+
+int fact(int n)
+{
+if (n <= 1)
+return 1;
+else
+return n * fact(n - 1);
+}
+
+condenset "fact" function
+
+#include <stdio.h>
+int fact(int n);
+int main()
+{
+    printf("factor of 5 = %d", fact(5));
+
+    return 0;
+}
+
+int fact(int n) {
+    return n <= 1 ? 1 : n * fact(n - 1);
+}
+
+######################################
+
+17) rewrite "fact" function without recursion
+
+int fact(int n) {
+    int total = 1;
+    for (int i = 1; i <= n; i++) {
+        total *= i;
+    }
+    return total;
+}
+
+
+####################################
+18) Rewrite gcd function with recursion
+
+int gcd(int m, int n) {
+    return n == 0 ? m : gcd(n, m % n);
+}
+
+##########################################
+19) Explain:
+
+
+void pb(int n) {
+    if (n != 0) {
+        pb(n / 2);
+        putchar('0' + n % 2);
+    }
+}
+
+--> convert decimal number to binary

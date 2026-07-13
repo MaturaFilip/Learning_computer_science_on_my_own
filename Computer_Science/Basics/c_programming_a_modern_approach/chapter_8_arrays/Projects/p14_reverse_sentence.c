@@ -28,8 +28,6 @@ int main(void) {
     word_len = 0;
     for (int i = (pointer_to_arr -1); i >= 0;) {
 
-
-
         if (sentence[i] == ' ' || i == 0) {
 
             // start printing till word is readed
