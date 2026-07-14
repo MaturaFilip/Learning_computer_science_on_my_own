@@ -1,0 +1,30 @@
+1) If "i" is a variable and "p" points to "i", which of the following expressions are aliases for "i"?
+
+a) *p  -> OK
+b) &p -> wrong => this is address of p
+c) *&p -> wrong => this is address of i
+d) &*p -> wrong => this is address of i
+e) *i -> wrong => i is not declared pointer
+f) &i -> wrong =< this is address of i
+g) *&i -> OK
+h) &*i -> wrong => i is not declared pointer
+
+
+#############################x
+
+2) If "i" is an int variable and "p" and "q" are pointers to int, which of the following assignments are legal?
+
+a) p = i; -> not because p is pointer to int and i is integer
+b) *p = &i; -> not because *p dereference the int value from i and &i is address
+c) &p = q; -> not because &p is address of pointer p
+d) p = &q; -> not legal (pointer t pointer is legal like this: int **p = &q;)
+e) p = *&q; -> legal
+f) p = q; -> legal
+g) p = *q; -> not legal, *q is integer, p is pointer
+h) *p = q; -> not legal, *p is integer, q is pointer
+i) *p = *q -> legal, *p is integer, *q is integer
+
+*p = *q -> this change the value
+p = q -> not p points to the same value as q if p, q are pointers
+
+#########################################
