@@ -15,7 +15,6 @@ int main(void) {
 }
 
 void avg_sum(int n, double a[n], double *avg, double *sum) {
-    
     for (int i = 0; i < n; i++) {
         *sum += a[i];
     }

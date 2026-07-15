@@ -48,3 +48,104 @@ void avg_sum(int n, double a[n], double *avg, double *sum) {
     }
     *avg = *sum / n;
 }
+
+
+##################################################x
+
+4) Write the following function:
+
+void swap(int *p, int *q):
+
+When passed the addresses of two variables, swap should exchange the values of the variables
+
+void swap (int *p, int *q) {
+    int temp = *q;
+    *q = *p;
+    *p = temp;
+}
+
+############################################
+
+5) Write the following function:
+
+void split_time(long total_sec, int *hr, int *min, int *sec);
+
+total_sec is a time represented as the number of seconds since midnight. hr, min, and sec are pointers to variables
+
+void split_time(long total_sec, int *hr, int *min, int *sec) {
+    if (total_sec > 86400) {
+        printf("More than 24 hours after midnight, terminating");
+        exit(1);
+    }
+    *hr = total_sec / 3600;
+    *min = (total_sec / 60) % 60;
+    *sec = total_sec % 60;
+}
+
+###########################################
+6) Write the following function:
+
+void find_two_largest(int n, int a[n], int *largest, int *second_largest);
+
+void find_two_largest(int n, int a[n], int *largest, int *second_largest) {
+    *largest = a[0];
+    *second_largest = a[1];
+
+    for (int i = 0; i < n; i++) {
+        if (a[i] > *largest) {
+            *second_largest = *largest;
+            *largest = a[i];
+        }
+        if (a[i] < *largest && a[i] > *second_largest) {
+            *second_largest = a[i];
+        }
+    }
+}
+
+##############################################
+
+7) Write the following function:
+
+void split_date(int day_of_year, int year, int *month, int *day);
+
+day_of_year int between 1-366
+
+void split_date(int day_of_year, int year, int *month, int *day) {
+    int days_per_month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    *month = 1;
+
+    if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+        // lap year
+        days_per_month[1] += 1;
+    }
+
+    for (int i = 0; i < 12; i++) {
+        if(day_of_year > days_per_month[i]) {
+            *month += 1;
+            day_of_year -= days_per_month[i];
+        } else {
+            break;
+        }
+    }
+    *day = day_of_year;
+}
+
+##############################################
+8) Write the following function:
+
+int *find_largest(int n, int a[n]);
+
+function will return pointer to the array's largest element
+
+int *find_largest(int n, int a[n]) {
+    int val = a[0];
+    int idx = 0;
+    for (int i = 1; i < n; i++) {
+        if (a[i] > val) {
+            val = a[i];
+            idx = i;
+        }
+    }
+    return &a[idx];
+}
