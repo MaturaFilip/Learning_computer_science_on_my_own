@@ -130,4 +130,74 @@ void store_zeros(int *a, int n) {
 
 ##########################################
 
-9)
+9) Write the following function: (function should return a[0] * b[0] + a[1] * b[1] etc.) Use pointer arithmetic
+
+double inner_product(const double *a, const double *b, int n);
+
+double inner_product(const double *a, const double *b, int n) {
+    int inner = 0;
+    double *p, *q;
+    p = a;
+    q = b;
+
+    for (; p < a + n; p++) {
+        inner += *p * *q;
+        q++;
+    }
+    return inner;
+}
+
+############################################
+
+10) Modify find_midle() from section 11.5 so tat is uses pointer arithmetic to calculate return value
+
+int *find_middle(int a[], int n) {
+    return &a[n/2];
+}
+
+WITH POINTER ARITHMETIC:
+
+int *find_middle(int *a, int n) {
+    return a + (n/2);
+}
+
+#########################################
+
+11) Modify "find_largest" function so that is uses pointer arithmetic -not subscripting - to visit array elements
+
+int find_largest(int *a, int n) {
+    int *p;
+    int max = *a;
+
+    for (p = a + 1; p < a + n; p++) {
+        if (*p > max) {
+            max = *p;
+        }
+    }
+    return max;
+}
+
+####################################
+
+12) Write the following function:
+
+void find_two_largest(const int *a, int n, int *largest, int *second_largest);
+
+void find_two_largest(const int *a, int n, int *largest, int *second_largest) {
+    *largest = *a;
+    *second_largest = *a + 1;
+
+    for (int *p = a; p < a + n; p++) {
+        if (*p > *largest) {
+            *second_largest = *largest;
+            *largest = *p;
+        }
+        if (*p < *largest && *p > *second_largest) {
+            *second_largest = *p;
+        }
+    }
+}
+
+########################################
+
+13)
