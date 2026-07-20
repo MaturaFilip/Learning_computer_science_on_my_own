@@ -7,7 +7,7 @@ int *q = &a[5];
 a) What is the value of * (p+3)? => 14
 b) What is the value of * (q-3)? => 34
 c) What is the value of q - p? => 4
-d) Is the condition p < q true or false? => false
+d) Is the condition p < q true or false? => true
 e) Is the condition *p < *q true or false? => false
 
 ####################################
@@ -17,7 +17,7 @@ e) Is the condition *p < *q true or false? => false
 middle = (low + high) / 2;  => adding two pointers is not allowed in pointer arithmetics, only subtracting two pointer.
 
 // this prevent overflow!
-middle = low + (high - low) / 2;
+middle = low + (high - low) / 2;    // (high - low) / 2 is constant and then we can add it to low and it is legal in pointer arithmetic
 
 #####################################x
 
@@ -140,9 +140,8 @@ double inner_product(const double *a, const double *b, int n) {
     p = a;
     q = b;
 
-    for (; p < a + n; p++) {
+    for (; p < a + n; p++, q++) {
         inner += *p * *q;
-        q++;
     }
     return inner;
 }
@@ -200,4 +199,114 @@ void find_two_largest(const int *a, int n, int *largest, int *second_largest) {
 
 ########################################
 
-13)
+13) Create identity matrix with single pointer
+
+    double ident[N][N];
+    double *p;
+    int i = 0;
+
+    for (p = &ident[0][0]; p < &ident[0][0] + (N * N); p++) {
+        if (i == 0) {
+            *p = 1;
+            i = N;
+        } else {
+            *p = 0;
+            i--;
+        }
+
+    }
+
+#########################################
+
+14) array below contains temperature readings
+
+int temperatures[7][24];
+
+Write statement that uses "search" function (exercise 7) to search entire temperatures array for the value 32
+
+bool search(const int a[], int n, int key) {
+    int *p;
+
+    for (p = a; p < a + n; p++) {
+        if (*p == key) {
+            return true;
+        }
+    }
+    return false;
+}
+
+STATEMENT:
+
+    for (int i = 0; i < week; i++) {
+        bool x = search(temperatures[i], day, 32);
+        printf("%b\n", x);
+    }
+
+######################################
+
+15) Write a loop that prints all temperature readings stored in row "i" of the temperatures array. Use a pointer to visit each element of the row.
+
+
+    int c = 0;
+    for (int *p = &temperatures[0][0]; p < &temperatures[0][0] + (week * day); p++) {
+        if (c == day) {
+            printf("\n");
+            c = 0;
+        }
+        printf("%d ", *p);
+        c++;
+    }
+
+#########################################
+
+16) Write a loop that prints the highest temperature in the temperatures array for each day of the week. Use "find_largest" function
+
+    for (int i = 0; i < week; i++) {
+        int x = find_largest(temperatures[i], day);
+        printf("Max value for day %d = %d\n", i+1, x);
+    }
+
+###################################
+
+17) Rewrite function with pointer arithmetic (eliminate "i", "j" and [], use single loop)
+
+int sum_two_dimensional_array(const int a[][LEN], int n) {
+    int i, j, sum = 0;
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            sum += a[i][j];
+        }
+    }
+    return sum;
+}
+
+CORRECTED:
+
+int sum_2D_array(const int a[][N], int n) {
+    int sum = 0;
+
+    for (int *p = a[0]; p < &a[0][0] + (n * n); p++) {
+        sum += *p;
+    }
+    return sum;
+}
+
+########################
+
+18) Rewrite "evaluate_position" (exercise 13 chapter 9). Use pointer arithmetic and single loop
+
+int evaluate_position_v2(char board[8][8]) {
+    int difference = 0;
+    char *p;
+    for (p = &board[0][0]; p <= &board[0][0] + (8 * 8); p++) {
+            if (isupper(*p) && isalpha(*p)) {
+                difference += points_for_piece(*p);
+            } else if (islower(*p) && isalpha(*p)) {
+                difference -= points_for_piece(*p);
+            } else {
+                continue;
+            }
+    }
+    return difference;
+}
