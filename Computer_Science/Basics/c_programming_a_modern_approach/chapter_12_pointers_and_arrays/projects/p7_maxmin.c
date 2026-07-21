@@ -1,4 +1,5 @@
 /* Finds the largest and smallest elements in an array */
+/* Modify exercise from chapter 11 to use pointers to array, instead of integers */
 
 #include <stdio.h>
 
@@ -7,14 +8,17 @@
 void max_min(int n, int a[n], int *max, int *min);
 
 int main(void) {
-    int b[ARR_LEN], big, small;
+    int b[ARR_LEN];
+    int big, small;
 
     printf("Enter %d numbers: ", ARR_LEN);
 
+    // Load array
     for (int i = 0; i < ARR_LEN; i++) {
         scanf(" %d", &b[i]);
     }
 
+    // find largest and smallest element
     max_min(ARR_LEN, b, &big, &small);
 
     printf("Largest: %d\n", big);
@@ -24,15 +28,14 @@ int main(void) {
 }
 
 void max_min(int n, int a[n], int *max, int *min) {
-    // initialization
-    *max = a[0];
-    *min = a[0];
+    *max = *min = *a;
 
     for (int i = 1; i < ARR_LEN; i++) {
-        if (*max < a[i]) {
-            *max = a[i];
-        } else if (*min > a[i]) {
-            *min = a[i];
+
+        if (*(a + i) > *max) {
+            *max = *(a + i);
+        } else if (*(a + i) < *min) {
+            *min = *(a + i);
         }
     }
 }
