@@ -1,6 +1,7 @@
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
+// File name: projects/2/ALU.hdl
 /**
  * ALU (Arithmetic Logic Unit):
  * Computes out = one of the following functions:
@@ -40,5 +41,30 @@ CHIP ALU {
         ng;      // if (out < 0)  equals 1, else 0
 
     PARTS:
-    //// Replace this comment with your code.
+    // zx, nx, zy, ny part
+    Mux16(a=x , b[0..15]=false , sel=zx , out=zxOut );
+    Not16(in=zxOut , out=zxNotOut );
+    Mux16(a=zxOut , b=zxNotOut , sel=nx , out=ReadyX );
+
+    Mux16(a=y , b[0..15]=false , sel=zy , out=zyOut );
+    Not16(in=zyOut , out=zyNotOut );
+    Mux16(a=zyOut , b=zyNotOut , sel=ny , out=ReadyY );
+
+    // And and FullAdder part
+    And16(a=ReadyX , b=ReadyY , out=xyAnd );
+    Add16(a=ReadyX , b=ReadyY , out=xyAdd );
+    Mux16(a=xyAnd , b=xyAdd , sel=f , out=ReadyXY );
+
+    // after "f"
+    Not16(in=ReadyXY , out=ReadyNotXY );
+    Mux16(a=ReadyXY , b=ReadyNotXY , sel=no , out=out, 
+            out[15]=ng, out[0..7]=zrLow, out[8..15]=zrHigh );
+    
+    // zr calculation
+    Or8Way(in=zrLow , out=zrTemp1 );
+    Or8Way(in=zrHigh , out=zrTemp2 );
+    Or(a=zrTemp1 , b=zrTemp2 , out=zrTemp3 );
+    // if all out bits are 0, output zr as 1!
+    Not(in=zrTemp3 , out=zr );
+
 }
