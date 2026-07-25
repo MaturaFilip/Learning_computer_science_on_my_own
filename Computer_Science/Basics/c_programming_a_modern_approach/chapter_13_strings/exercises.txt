@@ -1,0 +1,52 @@
+##########################
+1) Identify which calls don't write single new-line characters, explain why
+
+a) printf("%c", '\n'); => correct, %c expect character and '\n' is a character
+b) printf("%c", "\n"); => incorrect, %c expect character "" is string or char *
+c) printf("%s", '\n'); => incorrect, %s expects char * string, but got character ''
+d) printf("%s", "\n"); => correct, %s expects string, got string
+e) printf('\n'); => incorrect, printf expects char *, got character ''
+f) printf("\n"); => correct, printf expects char * "" and got it
+g) putchar('\n'); => correct, expects char and got it
+h) putchar('\n'); => incorrect, expects '' not ""
+i) puts('\n'); => incorrect, expects "" not ''
+j) puts("\n"); => incorrect, puts() put \n automatically, so this prints \n two times
+k) puts(""); => correct
+
+##########################
+2) Suppose that "p" has been declared as follows:
+
+char *p = "abc"
+
+Which of the following funciton calls are legal? Show the output produced by legal call, explain why the others are illegal
+
+a) putchar(p); => incorrect, expects character not a pointer to a string
+b) putchar(*p); => it prints "a" the first character of the strin
+c) puts(p); => prints "abc"
+d) puts(*p); => incorrect, expects char * (pointer)
+
+
+#############################
+3) Suppose that we call "scanf" as follows:
+
+scanf("%d%s%d", &i, s, &j);
+
+If the user enters 12abc34 56def78, what will be the value of "i", "s" and "j" after the call?
+Assume that "i" and "j" are int variables and "s" is an array of characters
+
+i = 12 (it gets numbers)
+s = abc34 (take everything and stops after white space)
+j = 56 (it gets number and stops when first alpha char appear)
+
+
+
+################################
+4) Modify the "read_line" function in each of the following ways:
+a) Have it skip white space before beginning to store input characters
+    read_line_skip_white_space.c
+b) have it stop reading at the first white-space character. Hint: to determine whether or not a character is white space, call the "isspace" function
+    read_line_while_white.c
+c) Have it stop reading at the first new-line character, then store the new-line character, then store the new-line character in the string
+    read_line_stop_while_new.c
+d) Have it leave behind characters that it doesn't have room to store
+    read_line_leave_characters.c
