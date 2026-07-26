@@ -317,3 +317,15 @@ Function should remove the file name and the preceding shlash
 result: http://knking.com
 Incorporate "search for the end of a string" idiom
 Hint: replace the last slash in the string by a null character \0
+
+// in-place implementation
+void build_index_url(char *domain) {
+    char *ptr_last;
+    while (*domain) {
+        if (*domain == '/') {
+            ptr_last = domain;
+        }
+        domain++;
+    }
+    *ptr_last = '\0';
+}
