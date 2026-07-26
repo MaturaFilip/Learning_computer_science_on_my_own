@@ -23,6 +23,7 @@ int read_line(char str[], int n) {
         if (i < n) {
             str[i++] = ch;
         }
+    // it will first store \n then stops
     } while (ch != '\n');
 
     str[i] = '\0'; /* terminates string*/

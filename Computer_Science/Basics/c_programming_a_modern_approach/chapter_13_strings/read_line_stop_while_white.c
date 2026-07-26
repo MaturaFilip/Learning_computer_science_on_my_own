@@ -8,7 +8,7 @@ int read_line(char str[], int n);
 int main(void) {
 
     char message[STR_LEN - 1];
-    read_line(message, STR_LEN);
+    read_line(message, STR_LEN - 1);
     printf("%s\n", message);
 }
 

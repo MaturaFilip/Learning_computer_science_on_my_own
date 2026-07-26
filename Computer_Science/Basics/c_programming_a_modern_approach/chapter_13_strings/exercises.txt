@@ -50,3 +50,270 @@ c) Have it stop reading at the first new-line character, then store the new-line
     read_line_stop_while_new.c
 d) Have it leave behind characters that it doesn't have room to store
     read_line_leave_characters.c
+
+#####################################
+5)  (a) Write a function "capitalize" that capitalizes all letters in its argument,
+    the argument will be a null-terminated string containing arbitary chracters,
+    not just letters. Use array subscripting to access the characters in the string. 
+    Hint: Use the "toupper" function to convert each character to upper-case
+
+void capitalize(char str[]) {
+    for (int i = 0; str[i] != '\0'; i++) {
+        str[i] = toupper(str[i]);
+    }
+}
+
+    (b) Rewrite "capitalize", this time using pointer arithmetic to access the characters
+    in the string.
+
+void capitalize(char str[]) {
+    while (*str) {
+        *str = toupper(*str);
+        str++;
+    }
+}
+
+##########################################
+6) Write a function "censor" that modifies a string by replacing
+   every occurence of "foo" by "xxx". For instance, the string
+   "food fool" would become "xxxd xxxl". ake the function as short
+   as possible without sacrificing clarity
+
+void censor(char str[]) {
+    while (*str) {
+        if (*str == 'f' && *(str + 1) == 'o' && *(str + 2) == 'o') {
+            *str = *(str + 1) = *(str + 2) = 'x';
+        }
+        str++;
+    }
+}
+
+#########################################
+7) Suppose that "str" is an array of characters. Which one of the following statements is not equivalent to the other three?
+
+a) *str = 0;
+b) str[0] = '\0';
+c) strcpy(str, "");
+d) strcat(str, ""); => this: concat null character to the end of the other string
+
+###########################################
+8) What will be the value of the string "str" after the following statements have been executed?
+
+strcpy(str, "tire_bouchon");
+strcpy(&str[4], "d-or-wi");
+strcat(str, "red?");
+
+=> tired-or-wired?
+
+###############################################
+9) What will be the value of the string "s1" after the following statements have been executed?
+
+strcpy(s1, "computer");
+strcpy(s2, "science");
+if (strcmp(s1, s2) < 0) {
+    strcat(s1, s2);
+} else {
+    strcat(s2, s1)
+}
+s1[strlen(s1) - 6] = '\0';
+
+=> computers
+
+##############################################
+10) the following function supposedly creates an identical copy of a string.
+    What's wrong with the function?
+
+char *duplicate(const char *p) {
+    char *q;
+    strcpy(q, p);
+    return q;
+}
+
+=> q value is undefined 
+
+##############################################
+11) In the QnA about how "strcp" might be writen using array subscripting. Modify the function to use pointer arithmetic instead
+
+int my_strcmp(char *s, char *t) {
+
+    for (; *s == *t; s++, t++) {
+        if (*s == '\0') {
+            return 0;
+        }
+    }
+    return *s - *t;
+}
+
+###########################################
+12) Write the following function:
+
+void get_extension(const char *file_name, char *extension);
+
+file_name points to a string containing a file name. Function store extension
+of the file name (test.txt -> it saves "txt" in the string pointed to by extension)
+If file name doesn't have extension, save emoty string (single null character)
+
+Hint: you can use "strlen", "strcpy"
+
+int main(void) {
+    char file_name[] = "test.txt";
+    char extensions[strlen(file_name)];
+
+    get_extension(file_name, extensions);
+    printf("%s\n", extensions);
+    return 0;
+}
+
+void get_extension(const char *file_name, char *extension)
+{
+    const char *ptr_last;
+	while (*file_name) {
+        if (*file_name == '.') {
+            ptr_last = file_name;
+        }
+        file_name++;
+    }
+    if (*ptr_last == '.') {
+        strcpy(extension, ptr_last + 1);
+    } else {
+        strcpy(extension, "");
+    }
+}
+
+####################################
+13) Write the following function:
+
+void build_index_url(const char *domain, char *index_url);
+
+Function should add "http://www." to the beginning of the string
+and "/index.html" to the end of the string.
+Hint: use strcat, strcpy
+
+void build_index_url(const char *domain, char *index_url) {
+    strcpy(index_url, "http://www.");
+
+    // go to the end of the index_url (points after ".")
+    while (*index_url) {
+        //printf("%c\n", *index_url);
+        index_url++;
+    }
+
+    strcat(index_url, domain);
+
+    while(*index_url) {
+        index_url++;
+    }
+
+    strcat(index_url, "/index.html");
+	
+}
+
+// version 2
+void build_index_url_v2(const char *domain, char *index_url) {
+    strcat(strcat(strcpy(index_url, "http://www."), domain), "/index.html");
+}
+
+######################################
+14) What does the following program print?
+
+#include <stdio.h>
+
+int main(void) {
+    char s[] = "Hsjodi", *p;
+
+    for (p = s; *p; p++) {
+        --*p;
+    }
+    puts(s);
+    return 0;
+}
+
+It will print: "Grinch", because it always lower the character by 1
+
+#######################################
+15) Let "f" be the following function:
+
+int f(char *s, char *t) {
+    char *p1, *p2;
+
+    for (p1 = s; *p1; p1++) {
+        for (p2 = t; *p2; p2++) {
+            if (*p1 == *p2) {
+                break;
+            }
+        
+        if (*p2 == '\0') {
+            break;
+        }
+        }
+    }
+    return p1 - s;
+}
+
+a) What is the value of f("abcd", "babc") => 3
+b) What is the value of f("abcd", "bcd") => 0
+c) In general, what value does "f" return when passed two strings strings "s" and "t"? It looks for the longest prefix
+in "s" that is also in "t", or check if first char in "s" is or is not in "t", or how many character they have in common
+
+
+###############################
+16) Use the techniques of Section 13.6 to condense the "count_spaces" function of Section 13.4.
+Replace "for" by a "while" loop
+
+NOT condensed:
+
+int count_spaces(const char s[]) {
+    int count = 0, i;
+    for (i = 0; s[i] != '\0'; i++) {
+        if (s[i] == ' ') {
+            count++;
+        }
+    }
+    return count;
+}
+
+CONDENSED:
+
+int count_spaces(const char s[]) {
+    int count = 0;
+    while (*s) {
+        if (*s++ == ' ') {
+            count++;
+        }
+    }
+    return count;
+}
+
+###############
+17) Write the following function:
+
+bool test_extension(const char *file_name, const char *extension);
+
+The function should return true if file_name extension matches "extension".
+
+bool test_extension(const char *file_name, const char *extension) {
+    const char *ptr_last;
+	while (*file_name++) {
+        if (*file_name == '.') {
+            ptr_last = file_name;
+        }
+    }
+
+    if (*ptr_last == '.') {
+        if (strcmp(ptr_last + 1, extension) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+##############################
+18) Write the following function:
+
+void remove_filename(char *url);
+
+url = "http://knking.com/index.html"
+Function should remove the file name and the preceding shlash
+result: http://knking.com
+Incorporate "search for the end of a string" idiom
+Hint: replace the last slash in the string by a null character \0
