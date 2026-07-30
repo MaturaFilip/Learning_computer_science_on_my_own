@@ -21,22 +21,12 @@ int main(int argc, char *argv[]) {
 
     for (i = 1; i < argc; i++) {
         for (j = 0; j < NUM_PLANETS; j++) {
-/*
-            char *p = argv[i];
-            char **q = &planets[j];
-            printf("%s\n", *q);
-            for ( ; *p; ++p) *p = tolower(*p);
-            //for ( ; **q; ++*q) **q = tolower(**q);
-*/
             
         if (compare_words(argv[i], planets[j])) {
             printf("%s is planet %d\n", argv[i], j + 1);
             break;
         }
-            //if (strcmp(argv[i], planets[j]) == 0) {
-            //    printf("%s is planet %d\n", argv[i], j + 1);
-            //    break;
-            //}
+
         }
         if (j == NUM_PLANETS) {
             printf("%s is not a planet\n", argv[i]);
@@ -59,5 +49,4 @@ bool compare_words(char *word_1, char *word_2) {
         }
     }
     return true;
-
 }
