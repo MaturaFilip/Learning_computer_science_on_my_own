@@ -1,6 +1,7 @@
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
+// File name: projects/3/b/RAM512.hdl
 /**
  * Memory of 512 16-bit registers.
  * If load is asserted, the value of the register selected by
@@ -12,5 +13,20 @@ CHIP RAM512 {
     OUT out[16];
 
     PARTS:
-    //// Replace this comment with your code.
+    DMux8Way(in=load , sel=address[0..2] , a=inA , b=inB ,
+            c=inC , d=inD , e=inE , f=inF , g=inG , h=inH );
+    
+    RAM64(in=in , load=inA , address=address[3..8] , out=memA );
+    RAM64(in=in , load=inB , address=address[3..8] , out=memB );
+    RAM64(in=in , load=inC , address=address[3..8] , out=memC );
+    RAM64(in=in , load=inD , address=address[3..8] , out=memD );
+    RAM64(in=in , load=inE , address=address[3..8] , out=memE );
+    RAM64(in=in , load=inF , address=address[3..8] , out=memF );
+    RAM64(in=in , load=inG , address=address[3..8] , out=memG );
+    RAM64(in=in , load=inH, address=address[3..8] , out=memH );
+
+    // show register output
+    Mux8Way16(a=memA , b=memB , c=memC ,
+              d=memD , e=memE , f=memF ,
+              g=memG , h=memH , sel=address[0..2] , out=out );
 }
