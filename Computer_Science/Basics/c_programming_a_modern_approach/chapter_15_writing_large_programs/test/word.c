@@ -10,7 +10,7 @@ int read_char(void) {
 int read_word(char *word, int len) {
     int ch, pos = 0;
 
-    // skip all the spaces adn tabs
+    // skip all the spaces
     while ((ch = read_char()) == ' ') {
         ;
     }
