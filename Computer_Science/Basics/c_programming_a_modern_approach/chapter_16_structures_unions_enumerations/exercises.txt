@@ -1,0 +1,177 @@
+###################
+1) In the following declarations, the "x" and "y" structures have members named "x" and "y":
+
+struct { int x, y; } x;
+struct { int x, y; } y;
+
+Are these declarations legal on an individual basis?
+Could both declarations appear as shown in a program? Justify the answer
+
+- Yes the declarations are legal and could be appears as shown, because we declare struct with different names
+    and and it is ok to have int x, y twice because they are in different scope
+
+    int main(void) {
+
+    struct {
+        int x;
+        int y;
+    } x;
+
+    struct {
+        int x;
+        int y;
+    } y;
+
+    y.x = 1;
+    y.y = 2;
+
+    x.x = 3;
+    x.y = 4;
+
+    printf("y: %d - %d \nx: %d - %d\n", y.x, y.y, x.x, x.y);
+    return 0;
+}
+
+##################################
+
+2)
+
+a) Declare structure variables named c1, c2, and c3, each having members "real" and "imaginary" of type double
+    struct {
+        double real;
+        double imaginary
+    } c1, c2, c3;
+
+b) Modify the declaration in part "a" so that c1's members initially have the values 0.0 and 1.0, while c2 are 1.0 and 0.0 (c3 not initialized)
+    struct {
+        double real;
+        double imaginary;
+    } c1 = {0.0, 1.0}, c2 = {1.0, 0.0}, c3;
+
+c) Write statements that copy the members of c2 into c1. Can this be done in one statement, or does it require two?
+    c1 = c2;
+d) Write statements that add the corresponding members of c1 and c2, storing the result in c3
+    c3.real = (c1.real + c2.real);
+    c3.imaginary = (c1.imaginary + c2.imaginary);
+
+
+##############################
+
+3)
+
+a) Show how to declare a tag named "complex" for a structure with
+    two members, imaginary type double
+        struct complex {
+        double real;
+        double imaginary;
+    };
+
+b) Use the complex tag to declare variables named c1, c2 and c3
+        struct complex {
+        double real;
+        double imaginary;
+    } c1, c2, c3;
+
+c) Write a function maed "make_complex that stores its two arguments
+    (both of type double) in a complex structure, that returns the structure
+
+    struct complex make_complex(double real, double imaginary) {
+    struct complex p;
+
+    p.real = real;
+    p.imaginary = imaginary;
+    return p;
+}
+
+d) Write a function named "add_complex" that adds the corresponding members
+    of its arguments (both complex structures), then return the result
+    (another compex structure)
+
+    struct  complex add_complex(struct complex a, struct complex b) {
+    struct complex p;
+
+    p.real = a.real + b.real;
+    p.imaginary = a.imaginary + b.imaginary;
+    return p;
+}
+
+####################
+
+4) Repeat Exercise 3, but this time using a type named Complex
+#include <stdio.h>
+
+    typedef struct Complex {
+        double real;
+        double imaginary;
+        } Complex;
+
+Complex make_complex(double real, double imaginary);
+Complex add_complex(Complex a, Complex b);
+
+int main(void) {
+    Complex x = make_complex(1.0, 2.0);
+    Complex y = make_complex(1.0, 2.0);
+
+    printf("%lf - %lf\n", x.real, x.imaginary);
+
+    Complex z = add_complex(x, y);
+    printf("%lf - %lf\n", z.real, z.imaginary);
+    return 0;
+}
+
+Complex make_complex(double real, double imaginary) {
+    Complex p;
+
+    p.real = real;
+    p.imaginary = imaginary;
+    return p;
+}
+
+Complex add_complex(Complex a, Complex b) {
+    Complex p;
+
+    p.real = a.real + b.real;
+    p.imaginary = a.imaginary + b.imaginary;
+    return p;
+}
+
+#########################
+
+5) Write the following functions, assiming that the "date" structure
+    contain three members: month, day and year (int)
+
+    a) int day_of_year (struct date d)
+int day_of_year(Date d) {
+    int days_per_month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int counter = 0;
+    if ((d.year % 4 == 0 && d.year % 100 != 0) || (d.year % 400 == 0)) {
+        // lap year
+        days_per_month[1] += 1;
+    }
+    // 1 
+    for (int i = 0; i < (d.month - 1); i++) {
+        counter += days_per_month[i];
+    }
+    counter += d.day;
+    return counter;
+}
+
+    Returns the day of the year (an integer between 1-366) that corresponds to the date d.
+
+    b) int compare_dates(struct date d1, struct date d2);
+
+    Returns -1 if d1 is an earlier date than d2, +1 if d1 is a later date than d2,
+    0 if d1 and d2 are the same
+
+int compare_dates(Date d1, Date d2) {
+    int d_1 = day_of_year(d1);
+    int d_2 = day_of_year(d2);
+
+    if (d_1 < d_2) {
+        return -1;
+    } else if (d_1 > d_2) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
