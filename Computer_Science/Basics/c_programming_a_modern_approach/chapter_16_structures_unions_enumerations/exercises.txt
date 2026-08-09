@@ -178,7 +178,7 @@ int compare_dates(Date d1, Date d2) {
 
 ###############################
 
-6) Write the following function, assimingg that the "time" structure contain 
+6) Write the following function, assuming that the "time" structure contain 
     three members: hours, minutes, seconds (int)
 
     struct time split_time (long total_seconds);
@@ -186,3 +186,259 @@ int compare_dates(Date d1, Date d2) {
     total_seconds is a time represented as the number of seconds since midnight.
     The function returns a structure containing the equivalent time in 
     hours (0-23), minutes (0-59), and seconds (0-59);
+
+Time split_time (long total_seconds) {
+    Time x = {
+        .hours =  total_seconds / 3600,
+        .minutes = (total_seconds % 3600) / 60,
+        .seconds = (total_seconds % 3600) % 60,
+    };
+    return x;
+}
+
+################################
+
+7) Assume that the fraction structure contains two members:
+    numerator and denoinator (int) Write functions that perform the following
+    operations on fractions:
+
+a) Reduce the fraction "f" to lowest terms. Hint: To reduce a fraction
+    to lowst terms, first compute the greatest common divisor GCD of the numerator
+    and denoinator. Then divide both the numerator and denominator by the GCD.
+    
+b) Add the fractions f1 and f2
+c) Subtract the fractions f2 from f1
+d) Multiply the fractions f1 and f2
+e) Divide the fraction f1 by the fraction f2
+
+Fraction reduce(Fraction x) {
+    int g = gcd(x.numerator, x.denominator);
+    Fraction z = {
+        .numerator = (x.numerator / g),
+        .denominator = (x.denominator / g),
+    };
+    return z;
+}
+
+int gcd(int m, int n) {
+    return n == 0 ? m : gcd(n, m % n);
+}
+
+Fraction add_frac(Fraction a, Fraction b) {
+    Fraction x = {
+        .numerator = a.numerator + b.numerator,
+        .denominator = a.denominator + b.denominator,
+    };
+    Fraction y = reduce(x);
+    return y;
+}
+
+Fraction mult_frac(Fraction a, Fraction b) {
+    Fraction x = {
+        .numerator = a.numerator * b.numerator,
+        .denominator = a.denominator * b.denominator,
+    };
+    Fraction y = reduce(x);
+    return y;
+}
+
+Fraction sub_frac(Fraction a, Fraction b) {
+    Fraction x = {
+        .numerator = a.numerator - b.numerator,
+        .denominator = a.denominator - b.denominator,
+    };
+    Fraction y = reduce(x);
+    return y;
+}
+
+Fraction mult_frac(Fraction a, Fraction b) {
+    if (b.numerator == 0 || b.denominator == 0) {
+        Fraction x = {
+            .numerator = 0,
+            .denominator = 0,
+        };
+        Fraction y = reduce(x);
+        return y;;
+    }
+    Fraction x = {
+        .numerator = a.numerator / b.numerator,
+        .denominator = a.denominator / b.denominator,
+    };
+    Fraction y = reduce(x);
+    return y;
+}
+
+##################################
+
+8) Let "color be the following structure:
+
+typedef struct Color {
+    int red;
+    int green;
+    int blue;
+} Color;
+
+a) Write a declaration for a "const" variable named MAGENTA of type
+    struct color whose members have the values 255, 0, 255 respectively
+
+    const Color MAGENTA = {
+        .red = 255,
+        .green = 0,
+        .blue = 255,
+    };
+
+b) (C99) Repeat part "a", but use a designated initializer that doesn't
+    specify the value of "green", allowing it to default to 0;
+    const Color MAGENTA = {
+        .red = 255,
+        .blue = 255,
+    };
+
+#############################
+
+9) Write the following functions (The "color" structure from 8)
+
+a) Color make_color(int red, int green, int blue);
+
+    Return a Color struct containing the specified red, green and blue
+    If any argument is less than zero, the corresponding member of the
+    structure will contain zero instead. If any argument is > 255, the
+    corresponding member of the structure will contain 255
+
+Color make_color(int red, int green, int blue) {
+    Color x = {
+        .red = check_col(red),
+        .green = check_col(green),
+        .blue = check_col(blue),
+    };
+    return x;
+}
+
+int check_col(int x) {
+    if (x > 255) {
+        return 255;
+    } else if (x < 0) {
+        return 0;
+    } else {
+        return x;
+    }
+}
+
+b) int getRed(Color c);
+
+Returns the value of c's red member
+int getRed(Color c) {
+    return c.red;
+}
+
+c) bool equal_color(Color color1, Color color2);
+
+Returns "true" if the corresponding members of color1 and color2
+are equal.
+
+bool equal_color(Color color1, Color color2) {
+    if (color1.red == color2.red &&
+        color1.green == color2.green &&
+        color1.blue == color2.blue) {
+            return true;
+        } else {
+            return false;
+        }
+}
+
+d) Color brighter(Color c);
+
+Returns a Color structure that represent a brighter version of the color c.
+    The structure is identical to c, except that each member has been divided
+    by 0.7 (with the result truncted to integer). However, there are three
+    special cases:
+        (1) If all members of c are zero, the function returns a color whose
+            members all have the value 3.
+        (2) If any ember of c is greater than 0, but less than 3, it is 
+            replaced by 3 before the division by 0.7
+        (3) If dividing by 0.7 causes a member to exceed 255, it is reduced
+            to 255.
+
+Can be really short with ternary operations
+
+Color brighter(Color c) {
+    Color x;
+    if (c.red == 0 && c.green == 0 && c.blue == 0) {
+        x.red = x.green = x.blue = 3;
+        return x;
+    }
+
+    if (c.red > 0 && c.red < 3) {
+        c.red = 3;
+    }
+    if (c.green > 0 && c.green < 3) {
+        c.green = 3;
+    }
+    if (c.blue > 0 && c.blue < 3) {
+        c.blue = 3;
+    }
+
+    if ((c.red / 0.7) > 255) {
+        x.red = 255;
+    } else {
+        x.red = c.red / 0.7;
+    }
+    if ((c.green / 0.7) > 255) {
+        x.green = 255;
+    } else {
+        x.green = c.green / 0.7;
+    }
+    if ((c.blue / 0.7) > 255) {
+        x.blue = 255;
+    } else {
+        x.blue = c.blue / 0.7;
+    }
+    return x;
+}
+
+e) Color darker(Color c);
+
+Returns a Color structure that represent a darker version of the color c.
+    The structure is identical to c, except that each member has been
+    multiplied by 0.7 (with the result truncated to an integer)
+Color darker(Color c) {
+    Color x = {
+        .red = c.red * 0.7,
+        .green = c.green * 0.7,
+        .blue = c.blue * 0.7,
+    };
+    return x;
+}
+
+################################
+10) The following structures are designed to store information about objects
+    on a graphics screen:
+
+struct point { int x, y;};
+struct rectangle { struct point upper_left, lower_right; };
+
+A "point" struct stores the x and y coordinates of a point on the screen.
+A "rectangle" struct stores the coordinates of the upper left and lower
+    right corners of a rectangle.
+Write functions that perform the following operations on rectangle
+    struct "r" passed as an argument:
+
+a) Compute the area of "r"
+
+int area(struct rectangle r) {
+    return (abs((r.lower_right.x - r.upper_left.x)) *
+           abs((r.upper_left.y - r.lower_right.y)));
+}
+
+b) Compute the center of "r", returning it as a "point" value. If either
+    the x or  coordinate of the center isn't and integer, store its
+    truncated value in the "point" structure
+
+struct point center(struct rectangle r) {
+	return (struct point) {(r.upper_left.x + r.lower_right.x) / 2,
+	                      (r.lower_right.y + r.upper_left.y) / 2};
+}
+
+c) Move "r" by "x" units in the "x" direction and "y" units in the "y"
+    direction, returning the modified version of "r"
+    ("x" and "y" are additional arguments to the function)
