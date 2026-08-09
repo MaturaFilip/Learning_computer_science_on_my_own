@@ -175,3 +175,14 @@ int compare_dates(Date d1, Date d2) {
         return 0;
     }
 }
+
+###############################
+
+6) Write the following function, assimingg that the "time" structure contain 
+    three members: hours, minutes, seconds (int)
+
+    struct time split_time (long total_seconds);
+
+    total_seconds is a time represented as the number of seconds since midnight.
+    The function returns a structure containing the equivalent time in 
+    hours (0-23), minutes (0-59), and seconds (0-59);
