@@ -442,3 +442,284 @@ struct point center(struct rectangle r) {
 c) Move "r" by "x" units in the "x" direction and "y" units in the "y"
     direction, returning the modified version of "r"
     ("x" and "y" are additional arguments to the function)
+
+##############&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&c1
+11) Suppose that "s" is the following structure:
+
+struct {
+    double a;
+    union {
+        char b[4];
+        double c;
+        int d;
+    } e;
+    char f[4];
+} s;
+
+If "char" values occupy one byte, "int" values occupy four bytes, and
+	"double" values occupy eight bytes, how much space will a C compiler
+	allocate for "s"? (Assume that the compiler leaves no "holes"
+	between members.
+	
+	20 bytes in total (8 bytes > double, union 8 bytes > double, char f[4] > 4 bytes
+	
+#####################
+12) Suppose that "u" is the following union:
+
+union {
+	double a;
+	struct {
+		char b[4];
+		double c;
+		int d;
+	} e;
+	char f[4];
+} u;
+
+How much space will a C compiler allocate for "u"? (Assume no holes)
+
+	- 16 bytes (struct is the biggest)
+	
+###########################x
+13) Suppose that "s" is the following structure
+	"point" is a structure tag decůared in exercise 10
+	
+struct shape {
+	int shape_kind;    // RECTANGLE or CIRCLE
+	struct point center;	// coordinates of center
+	union {
+		struct {
+			int height;
+			int width;
+		} rectangle;
+		
+		struct {
+			int radius;
+		} circle;
+	} u;
+} s;
+
+If the value of "shape_kind" is "RECTANGLE" the height and width members store the dimensions
+	of a rectangle. If the value of shape_kind is CIRCLE, the radius member stores the 
+	radius of a circle. Indicate which of the following statements are legal, and show
+	how to repair the ones that aren't.
+	
+a) s.shape_kind = RECTANGLE; (ilegal, first RECTANGLE macro needs to be defined)
+b) s.center.x = 10; (legal)
+c) s.height = 25  (ilegal, correct form: s.u.rectangle.height = 25;)
+d) s.u.rectangle.width = 8; (legal)
+e) s.u.circle = 5; (ilegal, correct form: s.u.circle.radius = 5;)
+f) s.u.radius = 5; (ilegal, correct form: s.u.circle.radius = 5;)
+
+###################
+14) Let "shape" be the structure tag declared in Exercise 13.
+	Write functions that perform the following operations on a
+	"shape" structure "s" passed as an argument
+	
+a) Compute the are of "s"
+
+int area(struct shape s) {
+    if (s.shape_kind == RECTANGLE) {
+        return (s.u.rectangle.height * s.u.rectangle.width);
+    }
+    
+    if (s.shape_kind == CIRCLE) {
+        return (3.14159 * s.u.circle.radius * s.u.circle.radius);
+    }
+}
+
+b) Move "s" by "x" units in the "x" direction and "y" units in the "y"
+	direction, returning the modified version of "s" (x and y are
+	additional arguments to the function)
+c) Scale "s" by a factor of "c" (a "double" value), returning the modified
+	version of "s" 
+	c is an additional argument to the function
+	
+	
+###################
+15)
+a) Declare a tag for an enumeration whose values represent the seven days of the week
+
+enum days { 
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+};
+
+b) Use "typedef" to define a name for the enumeration part (a)
+typedef enum Days {
+	MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+} Days;
+
+#####################x
+16) Which of the following statements about enumeration constants are true?
+
+a) An enumeration constant may represent any integer specified by the programmer
+	- Yes:
+	enum Month {
+		JAN = 0
+	} Month;
+	
+b) Enumeration constants have exactly the same properties as constants 
+	created using #define
+	- false (subject to C scope -> not like #define that have global, NOT replaced 
+		by preprocessor!
+c) Enumeration constants have the values 0,1,2,... by default.
+	- true
+d) All constants in an enumeration must have different values
+	- no, duplicates are allowed
+e) Enumeration constants may be used as integers in expressions
+	- yes
+	
+####################################
+
+17) Suppose that "b" and "i" are declared as follows:
+
+enum {FALSE, TRUE} b;
+int i;
+
+Which of the following statements are legal? Which ones are "safe"
+	(always yield a meaningful result)?
+	
+a) b = FALSE;    // legal, safe
+b) b = i;    // legal, not safe (i can by any integer, not just 0, 1)
+c) b++;   // legal, not safe (b can be 1 and then 2 > which is not meaningful for this enum)
+d) i = b;  // legal, safe
+e) i = 2 * b + 1;  // legal safe
+
+
+###############################
+18) 
+
+a) Each square of a chessboard can hold one piece - a pawn, knight, bishop, rook, queen
+	or king - or it may be empty. Each piece is either black or white. Define twu enums
+	types: "Piece", which has seven possible values (one of which is empty) and "Color",
+	which has two
+	
+	enum Piece {
+		PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, EMPTY
+	} Piece;
+	
+	enum Color {
+		WHITE, BLACK
+	} Color;
+	
+b) Using the types from part (a), define a structure type named "Square" that can store
+	both the type of a piece and its color.
+	
+    typedef struct Square {
+        enum Piece piece;
+        enum Color color;
+    } Square;
+	
+c) Using the "Square" type from part (b), declare an 8x8 array named board that
+	can store the entire contents of a chessboard.
+	
+Square board[8][8];
+
+d) Add an initializer to the declaration in part (c) so that "boards" initial value corresponds
+	to the usual arrrangement of pieces at the start of a chess game. A square that's not
+	occupied by a piece should have an "empty" piece value and the color black.
+	
+Square board[8][8] =
+{
+		{{ROOK, BLACK}, {KNIGHT, WHITE}, {BISHOP, BLACK}, {QUEEN, WHITE},
+		 {KING, BLACK}, {BISHOP, WHITE}, {KNIGHT, BLACK}, {ROOK, WHITE}},
+		{{PAWN, WHITE}, {PAWN, BLACK}, {PAWN, WHITE}, {PAWN, BLACK},
+		 {PAWN, WHITE}, {PAWN, BLACK}, {PAWN, WHITE}, {PAWN, BLACK}},
+		{{EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK},
+		 {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}},
+		{{EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK},
+		 {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}},
+		{{EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK},
+		 {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}},
+		{{EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK},
+		 {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}, {EMPTY, BLACK}},
+		{{PAWN, BLACK}, {PAWN, WHITE}, {PAWN, BLACK}, {PAWN, WHITE},
+		 {PAWN, BLACK}, {PAWN, WHITE}, {PAWN, BLACK}, {PAWN, WHITE}},
+		{{ROOK, WHITE}, {KNIGHT, BLACK}, {BISHOP, WHITE}, {QUEEN, BLACK},
+		 {KING, WHITE}, {BISHOP, BLACK}, {KNIGHT, WHITE}, {ROOK, BLACK}}
+};
+
+################################
+19) Declare a structure with the following members whose tag is "pinball_machine":
+	name - a string of up to 40 characters
+	year - an integer (representing the year of manufacture)
+	type - an enumeration which values EM (electromechanical) and SS (solid state)
+	players - an integer (representing the maximum number of players)
+	
+    struct pinball_machine {
+        char name[40 + 1];
+        int year;
+        enum {
+            EM, SS
+        } type;
+        int players;
+    };
+	
+#####################################
+20) Suppose that the "direction" variable is declared in the following way:
+
+enum {NORTH, SOUTH, EAST, WEST} direction;
+
+Let "x" and "y" be int variables. Write a "switch" statement that test the value of 
+	"direction", incrementing "x" if "direction" is "EAST", decrementing "x" if 
+	"direction" is "WEST", incrementing "y" if "direction" is "SOUTH", and 
+	decrementing "y" if "direction is "NORTH"
+	
+    enum {NORTH, SOUTH, EAST, WEST} direction;
+    int x, y;
+    
+    switch (dir) {
+        case EAST:
+            x += 1;
+            break;
+        case WEST:
+            x -= 1;
+            break;
+        case SOUTH:
+            y += 1;
+            break;
+        case NORTH:
+            y -= 1;
+            break;
+        
+    }
+	
+########################
+21) What are integer values of the enumeration constants in each of the following declarations?
+
+a) enum {NUL, SOH, STX, ETX};    // 0, 1, 2, 3
+b) enum {VT = 11, FF, CR};	// 11, 12, 13
+c) enum {SO = 14, SI, DLE, CAN = 24, EM};	// 14, 15, 16, 24, 25
+d) enum {ENQ = 45, ACK, BEL, LF = 37, ETB, ESC};	// 45, 46, 47, 37, 38, 39
+
+############################
+22) Let "chess_pieces" be the following enumeration:
+
+enum chess_pieces {KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN};
+
+a) Write a declaration (including an initializer) for a constant array of integers named
+	"piece_value" that stores the numbers 200, 9, 5, 3, 3 and 1, representing value of
+	each chess piece, from king to pawn (The king's value is actually infinite, since
+	"caputring" the king (checkmate) ends the game, but some chess-playing software assigns
+	the king a large value such as 200.)
+	
+	const int piece_value[] = {200, 9, 5, 3, 3, 1};
+	
+b) (C99) Repeat part (a), but use a designated initializer to the array. Use the enumeration
+	constants in "chess_pieces" as subscripts in the designators. (Hint: See the last
+	question in Q&A for an example
+	
+    const int piece_value[] = {
+        [KING] = 200,
+        [QUEEN] = 9,
+        [ROOK] = 5,
+        [BISHOP] = 3,
+        [KNIGHT] = 3.
+        [PAWN] = 1
+    };
+	
+ENUMERATED TYPE CAN BE USED AS SUBSCRIPTS!!!
+
+printf("%d\n", piece_value[KING]);
+	
