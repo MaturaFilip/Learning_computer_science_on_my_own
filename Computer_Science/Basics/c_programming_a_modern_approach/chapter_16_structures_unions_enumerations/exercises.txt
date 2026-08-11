@@ -443,8 +443,20 @@ c) Move "r" by "x" units in the "x" direction and "y" units in the "y"
     direction, returning the modified version of "r"
     ("x" and "y" are additional arguments to the function)
 
-##############&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&c1
+d) Determine whether a point "p" lies within "r", returning true or false
+    ("p" is an additional argument of type struct point)
+
+bool point_in_rectangle(struct rectangle r, struct point p) {
+    if (p.x < MAX(r.lower_right.x, r.upper_left.x) && 
+        p.x > MIN(r.lower_right.x, r.upper_left.x) &&
+        p.y < MAX(r.lower_right.y, r.upper_left.y) &&
+        p.y > MIN(r.lower_right.y, r.upper_left.y)) {
+            return true;
+        }
+        return false;
+}
+
+######################
 11) Suppose that "s" is the following structure:
 
 struct {
@@ -517,7 +529,7 @@ f) s.u.radius = 5; (ilegal, correct form: s.u.circle.radius = 5;)
 	Write functions that perform the following operations on a
 	"shape" structure "s" passed as an argument
 	
-a) Compute the are of "s"
+a) Compute the area of "s"
 
 int area(struct shape s) {
     if (s.shape_kind == RECTANGLE) {
@@ -532,9 +544,30 @@ int area(struct shape s) {
 b) Move "s" by "x" units in the "x" direction and "y" units in the "y"
 	direction, returning the modified version of "s" (x and y are
 	additional arguments to the function)
+
+
+struct shape move(struct shape s, int move_x, int move_y) {
+    s.center.x += move_x;
+    s.center.y += move_y;
+    return s;
+}
+
 c) Scale "s" by a factor of "c" (a "double" value), returning the modified
 	version of "s" 
 	c is an additional argument to the function
+
+struct shape scale(struct shape s, double c) {
+    if (s.shape_kind == RECTANGLE) {
+        s.u.rectangle.height *= c;
+        s.u.rectangle.width *= c;
+        return s;
+    }
+    
+    if (s.shape_kind == CIRCLE) {
+        s.u.circle.radius *= c;
+        return s;
+    }
+}
 	
 	
 ###################

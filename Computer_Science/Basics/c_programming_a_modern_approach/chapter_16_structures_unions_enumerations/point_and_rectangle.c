@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 struct point {int x, y; };
 struct rectangle { struct point upper_left, lower_right;};
 
 
 int area(struct rectangle a);
 struct point center(struct rectangle r);
-struct point move(struct rectangle r, int move_x, int move_y);
+struct rectangle move(struct rectangle r, int move_x, int move_y);
+bool point_in_rectangle(struct rectangle r, struct point p);
 
 int main(void) {
     struct rectangle x;
@@ -18,6 +22,7 @@ int main(void) {
     printf("area: %d\n", area(x));
     struct point c = center(x);
     printf("center: x = %d, y = %d\n", c.x, c.y);
+    printf("%d\n", point_in_rectangle(x, c));
     return 0;
 }
 
@@ -31,7 +36,22 @@ struct point center(struct rectangle r) {
 	                      (r.lower_right.y + r.upper_left.y) / 2};
 }
 
-struct point move(struct rectangle r, int move_x, int move_y) {
-    ;
+struct rectangle move(struct rectangle r, int move_x, int move_y) {
+    r.lower_right.x += move_x;
+    r.upper_left.x += move_x;
+
+    r.lower_right.y += move_y;
+    r.upper_left.y += move_y;
+    return r;
+}
+
+bool point_in_rectangle(struct rectangle r, struct point p) {
+    if (p.x < MAX(r.lower_right.x, r.upper_left.x) && 
+        p.x > MIN(r.lower_right.x, r.upper_left.x) &&
+        p.y < MAX(r.lower_right.y, r.upper_left.y) &&
+        p.y > MIN(r.lower_right.y, r.upper_left.y)) {
+            return true;
+        }
+        return false;
 }
 
