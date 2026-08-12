@@ -495,7 +495,7 @@ How much space will a C compiler allocate for "u"? (Assume no holes)
 	
 ###########################x
 13) Suppose that "s" is the following structure
-	"point" is a structure tag decůared in exercise 10
+	"point" is a structure tag declared in exercise 10
 	
 struct shape {
 	int shape_kind;    // RECTANGLE or CIRCLE
