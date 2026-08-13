@@ -10,15 +10,15 @@ struct node {
 // initially, the list is empty
 struct node *first = NULL;
 
-struct node *add_to_list (struct node *list, int n);
+void add_to_list(struct node **list, int n);
 struct node *read_numbers(void);
 struct node *search_list(struct node *list, int n);
 struct node *delete_from_list(struct node *list, int n);
 
 int main(void) {
     
-    first = add_to_list(first, 10);
-    first = add_to_list(first, 20);
+    add_to_list(&first, 10);
+    add_to_list(&first, 20);
 
     return 0;
 }
@@ -33,11 +33,12 @@ struct node *read_numbers(void) {
         if (n == 0) {
             return first;
         }
-        first = add_to_list(first, n);
+        add_to_list(&first, n);
     }
 }
 
 // Add node to the list and return new node
+/*
 struct node *add_to_list (struct node *list, int n) {
     struct node *new_node;
     
@@ -50,6 +51,22 @@ struct node *add_to_list (struct node *list, int n) {
     new_node->value = n;
     new_node->next = list;
     return new_node;
+}
+*/
+
+// add_to_list
+void add_to_list(struct node **list, int n) {
+    struct node *new_node;
+
+    new_node = malloc(sizeof(struct node));
+    if (new_node == NULL) {
+        printf("Error: malloc failed in add_to_list\n");
+        new_node = NULL;
+        exit(EXIT_FAILURE);
+    }
+    new_node->value = n;
+    new_node->next = *list;
+    *list = new_node;
 }
 
 // "list" is a copy
