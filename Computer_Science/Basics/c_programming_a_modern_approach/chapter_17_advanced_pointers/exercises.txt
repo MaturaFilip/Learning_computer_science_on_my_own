@@ -234,7 +234,7 @@ int f1(int (*f) (int));
 int f2(int i);
 
 int main(void) {
-	printf("Anser: %d\n", f1(f2));
+	printf("Answer: %d\n", f1(f2));
 	return 0;
 }
 
@@ -249,16 +249,71 @@ int f2(int i) {
 	return i * i + i - 12;
 }
 
+
+    - Output is 3
+    - to while loop we put f2 function so the cycle is:
+        0 * 0 + 0 - 12 = -12    // n += 1, loop again
+        1 * 1 + 1 - 12 = -10    // n += 1, loop again
+        2 * 2 + 2 - 12 = -6     // n += 1, loop again
+        3 * 3 + 3 - 12 = 0      // stop and return n (3)
 ##############################################
 16) Write the following function. The call "sum(g, i, j)" should return
 	g(i) + ... + g(j).
 	
 	int sum(int (*f) (int), int start, int end);
+
+int sum(int (*f) (int),
+        int start, int end);
+int g(int x);
+
+int main(void) {
+	printf("Sum: %d\n", sum(g, 0, 5));
+	return 0;
+}
+
+int sum(int (*f) (int),
+        int start, int end) {
+
+    int counter = 0;
+
+    for (; start <= end; start++) {
+        counter += f(start);
+    }
+    return counter;
+}
+
+int g(int x) {
+    return x * x;
+}
 	
 ##############################################
 17) Let "a" be an array of 100 integers. Write a call of "qsort" that sorts only
 	the last 50 elements in "a" (You don't need to write the comparison function)
 	
+    - shorter version with 10 elements (work for 100 elem)
+
+#include <stdio.h>
+#include <stdlib.h>
+#define N 10
+
+int compare(const void *a, const void *b) {
+    int *valA = a;
+    int *valB = b;
+    return *valA - *valB;
+}
+
+int main(void) {
+    int arr[N] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+    
+    int *p = &arr[5];
+    qsort(p, (N / 2), sizeof(arr[0]), compare);
+
+    for (int i = 0; i < N; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    return 0;
+}
 ###############################################
 18) Modify the "compare_parts" function so that parts are sorted with their
 	numbers in descending order.
@@ -283,3 +338,13 @@ int f2(int i) {
 	 {"exit"		exit_cmd}
 	
 	};
+
+void run_fun(char *s) {
+    int n = sizeof(file_cmd) / sizeof(file_cmd[0]);
+
+    for (int i = 0; i < n; i++) {
+        if (strcmp(s, file_cmd[i].cmd_name) == 0) {
+            file_cmd[i].cmd_pointer();
+        }
+    }
+}
