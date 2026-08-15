@@ -22,6 +22,7 @@ void insert(void);
 void search(void);
 void update(void);
 void print(void);
+int compare_parts(const void *p, const void *q);
 
 // Prompts the user to enter op_code -> perform action and ask again
 int main(void) {
@@ -44,6 +45,7 @@ int main(void) {
             case 'q': return 0;
             default: printf("Illegal code\n");
         }
+        print();
         printf("\n");
     }
 }
@@ -148,4 +150,9 @@ void print(void) {
     for (p = inventory; p != NULL; p = p->next) {
         printf("%7d         %-25s%11d\n", p->number, p->name, p->on_hand);
     }
+}
+
+int compare_parts(const void *p, const void *q) {
+    return ((struct part *) q)->number -
+           ((struct part *) p)->number;
 }

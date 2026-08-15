@@ -1,4 +1,4 @@
-#######################x
+####################### [DONE]
 1) Write a function named "my_malloc" that serves as a wrapper for malloc
 	When we call "my_malloc" and ask it to allocate "n" bytes, it in turn calls
 	malloc, tests to make sure that malloc doesn't return a null pointer, and
@@ -29,7 +29,7 @@ void *my_malloc(size_t size) {
 	return p;
 }
 
-###############################xx
+############################### [DONE]
 2)Write a function named "duplicate" that uses dynamic storage allocation
 	to create a copy of a string. For example:
 	
@@ -53,7 +53,7 @@ char *duplicate(char *s) {
 	return p;
 }
 
-##################################
+################################## [DONE]
 3) Write a following function:
 	
 	int *create_array(int n, int initial_value);
@@ -75,7 +75,7 @@ int *create_array(int n, int initial_value) {
     return temp;
 }
 
-################################
+################################ [DONE]
 4) Suppose that the following declarations are in effect:
 
 	struct point { int x, y; };
@@ -103,7 +103,7 @@ int main()
 }
 
 
-###############################
+############################### [DONE]
 5) Suppose that "f" and "p" are declared as follows:
 
 struct {
@@ -121,37 +121,34 @@ b) p->e[3] = 10;	// legal
 c) (*p).d.a = '*';  // legal, same as p->d.a = '*';
 d) p->d->c = 20;	// not legal, Corrected: p->d.c = 20;
 
-#######################################
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+####################################### [DONE]
 6) Modify the "delete_from_list" function so that it uses only one pointer
 	variable instead of two (cur and prev)
 	
 struct node *delete_from_list(struct node *list, int n) {
-    struct node *cur
-	
+    struct node *cur;
 	cur = list;
-	if (cur == NULL) {
+    
+	if (cur->value == n) {
 		list = list->next;		// "n" in first node (delete first node)
 		free(cur);
 		return list;
 	}
-	
-    while (cur->next != NULL) {
-		if (cur->next.value == n) {
-			struct node *temp = cur->next;
-			cur->next = cur->next->next;
-			free(temp);
-			break;
-		}
-	}
-    
-    if (cur == NULL) {
-        return list;    // "n" not found
+
+    while(cur->next != NULL && cur->next->value != n) {
+        cur = cur->next;
     }
+
+    if (cur->next != NULL && cur->next->value == n) {
+        struct node *del_node = cur->next;
+        cur->next = cur->next->next;
+        free(del_node);
+    }
+
+    return list;
 }
 
-##################################
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+################################## [DONE]
 7) The following loop is supposed to delete all nodes from a linked list and
 	release the memory that they occupy. Unfortunately, the loop is incorrect.
 	Explain what's wrong with it and show how to fix the bug.
@@ -159,17 +156,123 @@ struct node *delete_from_list(struct node *list, int n) {
 	for (p = first; p != NULL; p = p->next) {
 		free(p)
 	}
+
+    - When we free the first node, we can't go to another with p->next
+
+Corrected:
+
+struct node *delete_all(struct node *list) {
+    struct node *cur = list;
+    struct node *nex;
+
+    while(cur != NULL) {
+        nex = cur->next;
+        free(cur);
+        cur = nex;
+    }
+
+    return NULL;
+}
 	
-#######################################
+####################################### [DONE]
 8) Modify stack.c (15.2) so that a stack is now stored as a linked list.
 	Replace the "contents" and "top" variables by a single variable
 	that points to the first node in the list (the "top" of the stack). 
 	Write the functions in stack.c so that they use this pointer. Remove
 	the "is_full" function, instead having "push" return either true
 	(if memory was available to create a node) or false (if not)
+
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+struct node {
+    int value;              // data
+    struct node *next;      // next node
+};
+
+// initially, the list is empty
+struct node *first = NULL;
+
+void make_empty(void);
+bool is_empty(void);
+bool push(int n);
+int pop(void);
+// HELPER FUNCTIONS
+struct node *delete_all(struct node *list);
+
+int main(void) {
+
+    push(10);
+    push(20);
+    push(30);
+    printf("%d\n", is_empty());
+    printf("%d\n", pop());
+    return 0;
+}
+
+////////
+// STACK
+////////
+
+void make_empty(void) {
+    first = delete_all(first);
+}
+
+bool is_empty(void) {
+    return (first == NULL);
+}
+
+bool push(int n) {
+    struct node *new_node;
+
+    new_node = malloc(sizeof(struct node));
+
+    if (new_node == NULL) {
+        printf("Error: malloc failed in push\n");
+        return false;
+    }
+
+    new_node->value = n;
+    new_node->next = first;
+    first = new_node;
+    return true;
+}
+
+// pop from the top of the stack and return value (not the struct)
+int pop(void) {
+
+    if (is_empty()) {
+        printf("Stack underflow. Terminating program\n");
+        exit(EXIT_FAILURE);
+    }
+    
+    struct node *node_pop = first;
+    first = node_pop->next;
+    int pop_val = node_pop->value;
+    free(node_pop);
+    return pop_val;
+}
+
+//####################
+//## HELPER FUNCTIONS
+//####################
+
+struct node *delete_all(struct node *list) {
+    struct node *cur = list;
+    struct node *nex;
+
+    while(cur != NULL) {
+        nex = cur->next;
+        free(cur);
+        cur = nex;
+    }
+
+    return NULL;
+}
 	
 	
-########################################
+######################################## [DONE]
 9) True or false. If "x" is a structure and "a" is a member of that
 	structure, then (&x)->a is the same as x.a. Justify the answer.
 	
@@ -177,11 +280,17 @@ struct node *delete_from_list(struct node *list, int n) {
 	(*new_node).value == new_node->value == (&new_node)->value
 	
 	
-########################################
+######################################## [DONE]
 10) Modify the "print_part" function of Section 16.2 so that its parameter
 	is a pointer to a "part" structure. Use the ->operator in your answer.
+
+void print_part(struct part *p) {
+    printf("Part number: %d\n", p->number);
+    printf("Part name: %s\n", p->name);
+    printf("Quantity on hand: %d\n", p->on_hand);
+}
 	
-########################################
+######################################## [DONE]
 11) Write the following function:
 
 	int count_occurrences(struct node *list, int n)
@@ -190,8 +299,20 @@ struct node *delete_from_list(struct node *list, int n) {
 	return the number of times that "n" appears in this list. Assume
 	that the "node" structure is the one defined in Section 17.5
 	
-	
-########################################
+
+int count_occurrences(struct node *list, int n) {
+    int counter = 0;
+
+    while(list != NULL) {
+        if (list->value == n) {
+            counter++;
+        }
+        list = list->next;
+    }
+    return counter;
+}
+
+######################################## [DONE]
 12) Write the following function:
 
 	struct node *find_last(struct node *list, int n)
@@ -201,7 +322,19 @@ struct node *delete_from_list(struct node *list, int n) {
 	doesn't appear in the list. Assume that the "node" structure is the one defined
 	in Section 17.5 (for instance 2 nodes contains n = 2, so return the last one.)
 	
-########################################
+struct node *find_last(struct node *list, int n) {
+    struct node *last_so_far;
+
+    while(list != NULL) {
+        if (list->value == n) {
+            last_so_far = list;
+        }
+        list = list->next;
+    }
+    return last_so_far;
+}
+
+######################################## [DONE]
 13) The following function is supposed to insert a new node into its proper place
 	in an ordered list, returning a pointer to the first node in the modified list.
 	Unfortunately, the function doesn't work correctly in all cases. Explain what's
@@ -219,13 +352,64 @@ struct node *delete_from_list(struct node *list, int n) {
 		return list;
 	}
 
-#########################################
+    - It didn't count for cases like that node is NULL, or when the new_node is smallest
+
+struct node *insert_into_ordered_list(struct node *list, struct node *new_node) {
+    struct node *cur = list, *prev = NULL;
+
+    if (cur == NULL) {
+        list = new_node;
+        return list;
+    }
+
+    while (cur->value <= new_node->value) {
+        prev = cur;
+        cur = cur->next;
+    }
+
+    if (prev == NULL) {
+        new_node->next = cur;
+        list = new_node;
+        return list;
+    }
+
+    prev->next = new_node;
+    new_node->next = cur;
+    return list;
+}
+
+######################################### [DONE]
 14) Modify the "delete_from_list" function Section 17.5, so that its first parameter
 	has type "struct node ** (a pointer to a pointer to the first node in a list) and
 	its return type is "void". "delete_from_list" must modify its first argument to
 	point to the list after desired node has been deleted.
+
+void delete_from_list(struct node **list, int n) {
+
+    if (list == NULL || *list == NULL) {
+        return;
+    }
+
+    struct node *cur = *list;
+    
+    if (cur->value == n) {
+        *list = (*list)->next;
+        free(cur);
+        return;
+    }
+
+    while(cur->next != NULL && cur->next->value != n) {
+        cur = cur->next;
+    }
+    if (cur->next != NULL) {
+        struct node *del_node = cur->next;
+        cur->next = cur->next->next;
+        free(del_node);
+    }
+
+}
 	
-###########################################
+########################################### [DONE]
 15) Show the output of the following program and explain what it does.
 
 #include <stdio.h>
@@ -256,7 +440,7 @@ int f2(int i) {
         1 * 1 + 1 - 12 = -10    // n += 1, loop again
         2 * 2 + 2 - 12 = -6     // n += 1, loop again
         3 * 3 + 3 - 12 = 0      // stop and return n (3)
-##############################################
+############################################## [DONE]
 16) Write the following function. The call "sum(g, i, j)" should return
 	g(i) + ... + g(j).
 	
@@ -286,7 +470,7 @@ int g(int x) {
     return x * x;
 }
 	
-##############################################
+############################################## [DONE]
 17) Let "a" be an array of 100 integers. Write a call of "qsort" that sorts only
 	the last 50 elements in "a" (You don't need to write the comparison function)
 	
@@ -314,11 +498,16 @@ int main(void) {
     printf("\n");
     return 0;
 }
-###############################################
+############################################### [DONE]
 18) Modify the "compare_parts" function so that parts are sorted with their
 	numbers in descending order.
+
+int compare_parts(const void *p, const void *q) {
+    return ((struct part *) q)->number -
+           ((struct part *) p)->number;
+}
 	
-###############################################
+############################################### [DONE]
 19) Write a function that, when given a string as its argument, searches the following
 	array of structures for a matching command name, then calls the function associated
 	with that name.
