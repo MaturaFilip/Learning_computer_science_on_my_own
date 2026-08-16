@@ -1,0 +1,199 @@
+/* Maintains a parts database (linked list version) */
+// sorted by number
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "readline.h"
+
+#define NAME_LEN 25
+
+struct part {
+    int number;
+    char name[NAME_LEN + 1];
+    int on_hand;
+    // link to next node
+    struct part *next;
+};
+
+struct part *inventory = NULL;  // points to first part
+
+struct part *find_part(int number);
+void insert(void);
+void search(void);
+void update(void);
+void print(void);
+void erase(void);
+int compare_parts(const void *p, const void *q);
+
+// Prompts the user to enter op_code -> perform action and ask again
+int main(void) {
+    char code;
+
+    for (;;) {
+        printf("Enter operation code: ");
+        scanf("%c", &code);
+        while (getchar() != '\n'); //{ ; }         // skips to end of line
+
+        switch (code) {
+            case 'i': insert();
+                      break;
+            case 's': search();
+                      break;
+            case 'u': update();
+                      break;
+            case 'p': print();
+                      break;
+            case 'e': erase();
+                      break;
+            case 'q': return 0;
+            default: printf("Illegal code\n");
+        }
+        printf("\n");
+    }
+    return 0;
+}
+
+// Look for a part number, return pointer to the node
+// If no number is found, returns NULL
+struct part *find_part(int number) {
+    struct part *p;
+
+    for (p = inventory;
+         p != NULL && number > p->number;
+         p = p->next) { ; }
+
+    if (p != NULL && number == p->number) {
+        return p;
+    }
+    return NULL;
+}
+
+// Propts the user for information about a new part, then insert
+// return early if the part already exists, or not enough space
+void insert(void) {
+    struct part *cur, *prev, *new_node;
+
+    new_node = malloc(sizeof(struct part));
+
+    if (new_node == NULL) {
+        printf("Database is full; can't add more parts.\n");
+        return;
+    }
+
+    printf("Enter part number: ");
+    scanf("%d", &new_node->number);
+
+    for (cur = inventory, prev = NULL;
+         cur != NULL && new_node->number > cur->number;
+         prev = cur, cur = cur->next) { ; }
+
+    if (cur != NULL && new_node->number == cur->number) {
+        printf("Part already exists.\n");
+        free(new_node);
+        return;
+    }
+
+    printf("Enter part name: ");
+    read_line(new_node->name, NAME_LEN);
+    printf("Enter quantity on hand: ");
+    scanf("%d", &new_node->on_hand);
+    while (getchar() != '\n');
+
+    new_node->next = cur;
+    if (prev == NULL) {
+        inventory = new_node;
+    } else {
+        prev->next = new_node;
+    }
+}
+
+// Prompts the user to enter a part number -> find the part (print name and quantity)
+// no part found -> print error
+void search(void) {
+    int number;
+    struct part *p;
+    printf("Enter part number: ");
+    scanf("%d", &number);
+
+    p = find_part(number);
+
+    if (p != NULL) {
+        printf("Part name: %s\n", p->name);
+        printf("Quantity on hand: %d\n", p->on_hand);
+    } else {
+        printf("Part not found.\n");
+    }
+}
+
+// Prompts the user to enter a part number (error if part not found)
+// prompts to enter change in quantity and update database
+void update(void) {
+    int number, change;
+    struct part *p;
+
+    printf("Enter part number to update: ");
+    scanf("%d", &number);
+
+    p = find_part(number);
+
+    if (p == NULL) {
+        printf("Part not found.\n");
+    } else {
+        printf("Enter change in quantity on hand: ");
+        scanf("%d", &change);
+
+        p->on_hand += change;
+    }
+}
+
+// Print a listing of all part in the database
+void print(void) {
+    struct part *p;
+
+    printf(" Part Number    Part Name                   Quantity on Hand\n");
+
+    for (p = inventory; p != NULL; p = p->next) {
+        printf("%7d         %-25s%11d\n", p->number, p->name, p->on_hand);
+    }
+}
+
+int compare_parts(const void *p, const void *q) {
+    return ((struct part *) q)->number -
+           ((struct part *) p)->number;
+}
+
+void erase(void) {
+    int number;
+    struct part *cur = inventory;
+    //struct part *prev;
+    if (cur == NULL) {
+        printf("Inventory is empty\n");
+        return;
+    }
+    printf("Enter part number to delete: ");
+    scanf("%d", &number);
+    while (getchar() != '\n');
+
+    if (find_part(number) == NULL) {
+        printf("Part was not found.");
+        return;
+    }
+
+    if (cur->number == number) {
+        inventory = inventory->next;
+        free(cur);
+        printf("Part with number: %d, deleted.\n", number);
+        return;
+    }
+
+    while(cur->next != NULL && cur->next->number != number) {
+        cur = cur->next;
+    }
+    if (cur->next != NULL && cur->next->number == number) {
+        struct part *del_node = cur->next;
+        cur->next = cur->next->next;
+        free(del_node);
+        printf("Part with number: %d, deleted.\n", number);
+    }
+
+}
