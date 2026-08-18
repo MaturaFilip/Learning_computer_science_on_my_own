@@ -1,0 +1,231 @@
+####################################### [DONE]
+1) For each of the following declarations, identify the storage class, type qualifiers,
+    type specifiers, declarators and initializers
+
+a) static char **lookup(int level);
+    - static = storage class
+    - char = type specifier
+    - **lookup(int level) = declarators
+
+b) volatile unsigned long io_flags;
+    - volatile = type qualifiers
+    - unsigned long = type specifier
+    - io_flags = declarator
+
+c) extern char *file_name[MAX_FILES], path[];
+    - extern = storage class
+    - char = type specifier
+    - *file_name[MAX_FILES], path[] = declarators
+
+d) static const char token_buf[] = "";
+    - static = storage class
+    - const = type qualifier
+    - char = type specifier
+    - token_buf[] = declarator
+    - "" = initializer
+
+####################### [DONE]
+
+2) Answer each of the following questions with auto, externm register and static
+
+a) Which storage class is used primarily to indicate that a variable or
+    function can be shared by several files?
+        - extern
+
+b) Suppose that a variable "x" is to be shared by several functions in one file_name
+    but hidded from functions in other files? Which storage class should "x" be declared to have?
+        - static
+
+c) Which storage classes can affect the storage duration of a variable?
+    - extern and static [ for local variables ]
+
+######################## [DONE]
+3) List the storage uration (storage or automatic), scope (block or file),
+    and linkage (internal, extern, or none) of each variable and parameter
+    in the following file:
+
+extern float a;                     // static, file, external
+
+void f(register double b) {         //  register double b = automatic, block, none
+    static int c;                   // static, block, none
+    auto char d;                    // automatic, block, none
+}
+
+####################### [DONE]
+4) Let "f" be the following function. What will be the value of f(10) if "f"
+    has never been called before? What will be the value of f(10) if "f" has
+    been called five times previously?
+
+int f(int i) {
+    static int j = 0;
+    return i * j++;
+}
+
+    - never called before: 0
+    - called previously 5 times -> next call: 50
+
+######################## [DONE]
+5) State whether each of the following statements is true or false. Justify each answer.
+
+a) Every variable with static storage duration has file scope
+    - no (can be block scope)
+b) Every variable declared inside a function has no linkage
+    - no, we can have for instnace "extern int j" -> In most cases, the variables will be defined
+        in another file and will have external linkage
+c) Every variable with internal linkage has static storage duration
+    - true
+d) Every parameter has block scope
+    - true (defined in a function -> which is block)
+
+########################## [DONE]
+6) The following function is supposed to print an error message. Each message is preceded by an
+    integer, indicating the number of times the function has been called. Unfortunately, the
+    function always displays 1 as the number of the error message. Locate the error and show
+    how to fix it without making any changes outside the function
+
+void print_error(const char *message) {
+    int n = 1;
+    printf("Error %d: %s\n", n++, message);
+}
+
+CORRECTED:
+
+void print_error(const char *message) {
+    static int n = 1;
+    printf("Error %d: %s\n", n++, message);
+}
+
+########################## [DONE]
+7) Suppose that we declare "x" to be constant object. Which of the following statements about
+    "x" is false?
+
+a) If "x" is of type int, it can be used as the value of a case label in switch statement
+    - false
+b) The compiler will check that no assignments is made to "x"
+    - true
+c) "x" is subject to the same scope rules as variables
+    - true
+d) "x" can be of any type
+    - true
+
+
+######################### [DONE]
+8) Write a complete description of the type of "x" as specified by each of the following declarations.
+
+a) char (*x[10]) (int);
+    - array of pointers to functions with one argument, returning char
+b) int (*x(int)) [5];
+    - function that takes int as argument and return pointer to array of 5 integers
+c) float *(*x(void)) (int);
+    - function that takes zero arguments and return pointer to a function that 
+        takes int as argument and return pointer to float
+
+d) void (*x(int, void (*y) (int))) (int);
+    - x is function that takes int and function that return void as argument and return
+        pointer to function that takes integer as argument and return nothing
+
+
+######################### [DONE]
+9) Use a series of type definitions to siplify each of the declarations in Exercise 8
+
+a)  char (*x[10]) (int);
+    - typedef char fn(int);
+    - typedef fn *fn_ptr;
+    - typef fn_ptr fn_ptr_arr[10];
+    - fn_ptr_arr x;
+
+b)  int (*x(int)) [5];
+    - typedef int arr[5];
+    - typedef arr *arr_ptr;
+    - typedef arr_ptr arr_ptr_fn(int);
+    - arr_ptr_fn x;
+
+c)  float *(*x(void)) (int);
+    - typedef float fn(int);
+    - typedef fn *fn_ptr;
+    - typedef fn_ptr fn_ptr_fn(void);
+    - typedef fn_ptr_fn x;
+
+d)  void (*x(int, void (*y) (int))) (int);
+    - typedef void fn(int);
+    - typeef fn *fp;
+    - typedef fp fp_fn(int, fp);
+    - typedef fp_f x;
+
+
+######################### [DONE]
+10) Write declarations for the following variables and functions:
+
+a) "p" is a pointer to a function with a character pointer argument that
+    returns a character pointer
+    - char *(*p) (char *);
+b) "f" is a function with two arguments: "p" -> a pointer to a structure
+    with tag "t", and "n" -> a long integer. "f" returns a pointer to a 
+    function that has no arguments and returns nothing
+    void *f(struct t *p, long n) (void)
+c) "a" is an array of four pointers to functions that have no arguments and
+    return nothing. The elements of "a" initially point to functions named
+    insert, search, update and print
+
+    - void (*a[4]) (void) = {insert, search, update, print};
+
+d) "b" is an array of 10 pointers to functions with two int arguments that
+    returns structures with tag t
+
+    - struct t (*b[10]) (int, int)
+
+########################
+11) In section 18.4 we was that the following declarations are ilegal
+
+- int f(int) [];    // functions can't return arrays
+    int *f(int)
+- int g(int) (int); // functions can't return functions
+    int (*(int))(int)
+- int a[10] (int);  // array elements can't be functions
+    int (*a[10])(int)
+
+We can, however, achieve similar effects by using pointers: a function can
+    return a pointer to the first element in an array, a function can return
+    a pointer to a function, and the element of an array can be pointers
+    to functions. Revise each of these declarations accordingly
+
+################################
+12)
+a) Write a complete description of the type of the function "f",
+    assuming that it's declared as follows:
+    
+    - int (*f(float (*) (long), char *)) (double);
+    - f is a function that takes two arguments,
+        pointer to a function that takes long and
+        return a pointer to a function that takes
+        boudle and return int
+
+b) Give an example showing how "f" would be called
+xxx
+
+##################################### [DONE]
+13) Which of the following declarations are legal?
+    (Assume that PI i a macro that represent 3.14159)
+
+a) char c = 65;                     // legal
+b) static int i = 5, j = i *i;      // ilegal (cannot calculate i * i)
+c) double d = 2 * PI;               // legal
+d) double angles[] = {0, PI / 2, PI, 3 * PI / 2};   // legal
+
+########################################### [DONE]
+14) Which kind of variables CANNOT be initialized?
+
+a) Array variables
+b) Enumeration variables
+c) Structure variables
+d) Union variables
+e) None of the above    // THIS
+
+######################################### [DONE]
+15) Which property of a variable determines whether or not
+    it has a default initial value
+
+a) Storage duration // this, for instance "static int x;" have 0
+b) Scope
+c) Linkage
+d) Type
