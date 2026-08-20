@@ -6,8 +6,12 @@
 #define PRIVATE static
 #define STACK_SIZE 100
 
+/*
+    - "Item" type defined inside header file
+*/
+
 PUBLIC struct stack_type {
-    int contents[STACK_SIZE];
+    Item contents[STACK_SIZE];
     int top;
 };
 
@@ -41,14 +45,14 @@ PUBLIC bool is_full(Stack s) {
     return s->top == STACK_SIZE;
 }
 
-PUBLIC push(Stack s, int i) {
+PUBLIC void push(Stack s, Item i) {
     if (is_full(s)) {
         terminate("Error in push: stack is full.");
     }
     s->contents[s->top++] = i;
 }
 
-PUBLIC int pop(Stack s) {
+PUBLIC Item pop(Stack s) {
     if (is_empty(s)) {
         terminate("Error in pop: stack is empty.");
     }

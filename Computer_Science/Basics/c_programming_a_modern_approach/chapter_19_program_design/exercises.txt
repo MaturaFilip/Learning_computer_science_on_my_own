@@ -1,0 +1,130 @@
+1) Create queue header file with functions needed.
+
+#ifndef QUEUE_H
+#define QUEUE_H
+
+#include <stdbool.h> 
+
+/*
+    - represent the type of data to be stored in QUEUE
+*/
+typedef int Item;
+
+// Queue type is a pointer to queue_type that stores the actual contents of the stack
+// queue_type structure is INCOMPLETE -> will be copleted in the file that implement stack
+typedef struct queue_type *Queue;
+
+// type Queue = pointer to incomplete queue_type
+// ADT needs create and destroy functions
+Queue create();
+void destroy(Queue q);
+
+void enqueue(Queue q, Item i);
+Item dequeue(Queue q);
+
+// inspect front element of the queue (HEAD)
+void peek(Queue q);
+
+// inspect back element of the queue (TAIL)
+void rear(Queue q);
+
+bool is_empty(Queue q);
+
+#endif
+
+################################
+
+2) Modify the stack2.c file to use the PUBLIC and PRIVATE macros.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "stack.h"
+
+// indicate which function adn variables are public and private
+// limited to a single file
+#define PUBLIC  /* empty */
+#define PRIVATE static
+
+#define STACK_SIZE 100
+
+
+PUBLIC struct node {
+    int data;
+    struct node *next;
+};
+
+PRIVATE struct node *top = NULL;
+
+PRIVATE void terminate(const char *message) {
+    printf("%s\n", message);
+    exit(EXIT_FAILURE);
+}
+
+PUBLIC void make_empty(void) {
+    while (!is_empty()) {
+        pop();
+    }
+}
+
+PUBLIC bool is_empty(void) {
+    return top == NULL;
+}
+
+// no limit size
+PUBLIC bool is_full(void) {
+    return false;
+}
+
+PUBLIC void push(int i) {
+    struct node *new_node = malloc(sizeof(struct node));
+    if (new_node == NULL) {
+        terminate("error in push: stack is full.");
+    }
+
+    new_node->data = i;
+    new_node->next = top;
+    top = new_node;
+}
+
+PUBLIC int pop(void) {
+    struct node *old_top;
+    int i;
+
+    if (is_empty()) {
+        terminate("Error in pop: stack is empty.");
+    }
+
+    old_top = top;
+    i = top->data;
+    top = top->next;
+    free(old_top);
+    return i;
+}
+
+####################################
+
+3)
+
+a) Write an array-based implementation of the queue module described in Exercise 1.
+
+    - 3 int to keep track of the queue's status
+        1) storing position of the first empty slot in the array (used when an item is inserted)
+        2) storing the position of the next item to be removed
+        3) storing the number of items in the queue
+    - An insertion or removal that would cause either of the first two integers ot be incremented past
+        the end of the array should instead reset the variable to zero, thus causing it to
+        "wrap around" to the beginning of the array. (circular array)
+
+PUBLIC void push(Stack s, Item i) {
+    if (is_full(s)) {
+        terminate("Error in push: stack is full.");
+    }
+    s->contents[s->top++] = i;
+}
+
+PUBLIC Item pop(Stack s) {
+    if (is_empty(s)) {
+        terminate("Error in pop: stack is empty.");
+    }
+    return s->contents[--s->top];
+}
