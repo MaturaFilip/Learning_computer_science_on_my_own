@@ -115,16 +115,12 @@ a) Write an array-based implementation of the queue module described in Exercise
         the end of the array should instead reset the variable to zero, thus causing it to
         "wrap around" to the beginning of the array. (circular array)
 
-PUBLIC void push(Stack s, Item i) {
-    if (is_full(s)) {
-        terminate("Error in push: stack is full.");
-    }
-    s->contents[s->top++] = i;
-}
+    - Solution in queue_array directory
 
-PUBLIC Item pop(Stack s) {
-    if (is_empty(s)) {
-        terminate("Error in pop: stack is empty.");
-    }
-    return s->contents[--s->top];
-}
+b) Write a linked-list implementation of the queue module described in Exercise 1.
+    Use two pointers.
+        1) one pointing to the first node in the list
+        2) second pointing to the last node
+
+    When an item is inserted into the queue, add it to the end of the list. When an item is
+    removed from the queue, delete the first node in the list.
