@@ -124,3 +124,36 @@ b) Write a linked-list implementation of the queue module described in Exercise 
 
     When an item is inserted into the queue, add it to the end of the list. When an item is
     removed from the queue, delete the first node in the list.
+
+    - implemented in queue_linked_list
+
+#######################################
+
+4) Skipped because Stack type is implemented as a pointer to stack_type
+5) Same as exercise 4
+
+#######################################
+
+6) Add a peek function to stackADT.c. This function will have a parameter of type
+    Stack. When called, it returns the top item on the stack but doesn’t modify the stack.
+
+    - stack linked list  peek function:
+
+PUBLIC Item peek(Stack s) {
+    if (is_empty(s)) {
+        terminate("Error in peek: stack is empty.");
+    }
+
+    return s->top->data;
+}
+
+    - stack array peek function
+
+PUBLIC Item peek(Stack s) {
+    if (is_empty(s)) {
+        terminate("Error in peek: stack is empty");
+    }
+    return s->contents[(s->top)-1];
+}
+
+    - dynamic array is the same as above

@@ -66,6 +66,7 @@ PUBLIC bool is_full(Stack s) {
 
 PUBLIC void push(Stack s, Item i) {
     if (is_full(s)) {
+        // TODO: allocate double size
         terminate("Error in push: stack is full.");
     }
     s->contents[s->top++] = i;
@@ -78,5 +79,10 @@ PUBLIC Item pop(Stack s) {
     return s->contents[--s->top];
 }
 
-
+PUBLIC Item peek(Stack s) {
+    if (is_empty(s)) {
+        terminate("Error in peek: stack is empty.");
+    }
+    return s->contents[(s->top)-1];
+}
 

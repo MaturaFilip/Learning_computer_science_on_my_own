@@ -43,6 +43,7 @@ void destroy(Stack s);
 void make_empty(Stack s);
 bool is_empty(Stack s);
 bool is_full(Stack s);
+Item peek(Stack s);
 
 // we implemented "Item" type instead of hardcoded "int"
 void push(Stack s, Item i);

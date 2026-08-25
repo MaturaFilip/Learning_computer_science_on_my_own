@@ -10,9 +10,11 @@ int main(void) {
 
     push(s1, 1);
     push(s1, 2);
+    printf("Peek: %d\n", peek(s1));
 
     n = pop(s1);
     printf("Popped %d from s1\n", n);
+    printf("Peek: %d\n", peek(s1));
     push(s2, n);
     n = pop(s1);
     printf("Popped %d from s1\n", n);

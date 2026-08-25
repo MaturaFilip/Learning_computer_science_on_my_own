@@ -59,5 +59,11 @@ PUBLIC Item pop(Stack s) {
     return s->contents[--s->top];
 }
 
+PUBLIC Item peek(Stack s) {
+    if (is_empty(s)) {
+        terminate("Error in peek: stack is empty");
+    }
+    return s->contents[(s->top)-1];
+}
 
 

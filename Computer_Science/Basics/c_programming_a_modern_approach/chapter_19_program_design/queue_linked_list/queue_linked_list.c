@@ -3,6 +3,7 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "queue.h"
 
 // indicate which function adn variables are public and private
@@ -10,7 +11,7 @@
 #define PUBLIC  /* empty */
 #define PRIVATE static
 
-PUBLIC struct node {
+struct node {
     // data is now type Item
     Item data;
     struct node *next;
@@ -49,6 +50,7 @@ PUBLIC void destroy(Queue q) {
     make_empty(q);
     // release memory for the queue_type strcture
     free(q);
+    q = NULL;
 }
 
 // TO REVIEW
