@@ -5,14 +5,15 @@ int main(void) {
     Stack s1, s2;
     int n;
 
-    s1 = create(100);
+    s1 = create(2);
     s2 = create(200);
 
     push(s1, 1);
     printf("Peek: %d\n", peek(s1));
     push(s1, 2);
     printf("Peek: %d\n", peek(s1));
-
+    push(s1, 3);
+    //push(s1, 3);
 
     n = pop(s1);
     printf("Popped %d from s1\n", n);

@@ -1,0 +1,3 @@
+Implement length function so when the function is called, return how any items are stored in stack.
+
+    - implemented in "stackADT_linked_list" directory

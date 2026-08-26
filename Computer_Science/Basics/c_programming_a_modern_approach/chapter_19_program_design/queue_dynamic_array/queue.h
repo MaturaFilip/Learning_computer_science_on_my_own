@@ -20,34 +20,38 @@
 
     - Items in stack ust be integers -> implement a change, so we can use every type we want
 */
-#ifndef STACKADT_H
-#define STACKADT_H
+#ifndef QUEUE_H
+#define QUEUE_H
 
 #include <stdbool.h> 
 
 /*
-    - represent the type of data to be stored on the stack
-    - instead of int, you can choose float, double, long etc.
+    - represent the type of data to be stored in QUEUE
 */
 typedef int Item;
 
-// Stack type is a pointer to stack_type that stores the actual contents of the stack
-// stack_type structure is incomplete -> will be ocmpleted in the file that implement stack
-typedef struct stack_type *Stack;
+// Queue type is a pointer to queue_type that stores the actual contents of the stack
+// queue_type structure is INCOMPLETE -> will be copleted in the file that implement stack
+typedef struct queue_type *Queue;
 
-// type Stack = pointer to incomplete stack_type
+// type Queue = pointer to incomplete queue_type
 // ADT needs create and destroy functions
-Stack create();
-void destroy(Stack s);
+Queue create(int size);
+void destroy(Queue q);
 
-void make_empty(Stack s);
-bool is_empty(Stack s);
-bool is_full(Stack s);
-Item peek(Stack s);
-int length(Stack s);
+void enqueue(Queue q, Item i);
+Item dequeue(Queue q);
 
-// we implemented "Item" type instead of hardcoded "int"
-void push(Stack s, Item i);
-Item pop(Stack s);
+// inspect front element of the queue (HEAD)
+Item peek(Queue q);
+
+// inspect back element of the queue (TAIL)
+Item rear(Queue q);
+
+bool is_empty(Queue q);
+bool is_full(Queue q);
+
+// no need for this function
+void make_empty(Queue q);
 
 #endif

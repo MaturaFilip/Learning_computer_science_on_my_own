@@ -29,7 +29,7 @@
     - represent the type of data to be stored on the stack
     - instead of int, you can choose float, double, long etc.
 */
-typedef int Item;
+typedef char Item;
 
 // Stack type is a pointer to stack_type that stores the actual contents of the stack
 // stack_type structure is incomplete -> will be ocmpleted in the file that implement stack
@@ -37,14 +37,14 @@ typedef struct stack_type *Stack;
 
 // type Stack = pointer to incomplete stack_type
 // ADT needs create and destroy functions
-Stack create();
+// create(int size); -> specifies the desired maimu stack size;
+Stack create(int size);
 void destroy(Stack s);
 
 void make_empty(Stack s);
 bool is_empty(Stack s);
 bool is_full(Stack s);
 Item peek(Stack s);
-int length(Stack s);
 
 // we implemented "Item" type instead of hardcoded "int"
 void push(Stack s, Item i);

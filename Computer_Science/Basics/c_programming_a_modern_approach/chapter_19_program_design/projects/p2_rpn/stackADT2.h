@@ -37,14 +37,14 @@ typedef struct stack_type *Stack;
 
 // type Stack = pointer to incomplete stack_type
 // ADT needs create and destroy functions
-Stack create();
+// create(int size); -> specifies the desired maimu stack size;
+Stack create(int size);
 void destroy(Stack s);
 
 void make_empty(Stack s);
 bool is_empty(Stack s);
 bool is_full(Stack s);
 Item peek(Stack s);
-int length(Stack s);
 
 // we implemented "Item" type instead of hardcoded "int"
 void push(Stack s, Item i);

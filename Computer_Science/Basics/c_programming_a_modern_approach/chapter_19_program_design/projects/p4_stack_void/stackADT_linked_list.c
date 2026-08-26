@@ -15,7 +15,7 @@
 
 PUBLIC struct node {
     // data is now type Item
-    Item data;
+    void *data;
     struct node *next;
 };
 
@@ -63,21 +63,21 @@ PUBLIC bool is_full(Stack s) {
     return false;
 }
 
-PUBLIC void push(Stack s, Item i) {
+PUBLIC void push(Stack s, void *p) {
     struct node *new_node = malloc(sizeof(struct node));
     if (new_node == NULL) {
         terminate("error in push: stack is full.");
     }
 
-    new_node->data = i;
+    new_node->data = p;
     new_node->next = s->top;
     s->top = new_node;
     s->len++;
 }
 
-PUBLIC Item pop(Stack s) {
+PUBLIC void *pop(Stack s) {
     struct node *old_top;
-    Item i;
+    void *i;
 
     if (is_empty(s)) {
         terminate("Error in pop: stack is empty.");
@@ -91,7 +91,7 @@ PUBLIC Item pop(Stack s) {
     return i;
 }
 
-PUBLIC Item peek(Stack s) {
+PUBLIC void *peek(Stack s) {
     if (is_empty(s)) {
         terminate("Error in peek: stack is empty.");
     }
