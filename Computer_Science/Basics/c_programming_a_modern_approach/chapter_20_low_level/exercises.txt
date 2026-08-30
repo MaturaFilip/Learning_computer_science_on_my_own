@@ -125,7 +125,7 @@ b) What does this function do?
     - It will return bit-field, where we select most significant bit with "m" and specify how many bits we want "n"
     - 1111 (m = 3, n = 2) = 0011
 
-##############################################################
+############################################################## [DONE]
 
 9) 
 a) Write the following function:
@@ -163,6 +163,21 @@ unsigned int reverse_bits(unsigned int n);
 
 "reverse_bits" should return an unsigned integer whose bits are the same as those in "n"
     but in reverse order
+
+unsigned int reverse_bits(unsigned int n) {
+    unsigned int out;
+    out = 0x0000;
+    
+    for (int i = 0; i < 32; i++) {
+        // move 0000 0000 to left by 1
+        // add the least-significant bit from n
+        out = (out << 1) | (n & 1);
+        
+        // move n to the right by 1 position
+        n >>= 1;
+    }
+    return out;
+}
 
 ##############################################################
 
