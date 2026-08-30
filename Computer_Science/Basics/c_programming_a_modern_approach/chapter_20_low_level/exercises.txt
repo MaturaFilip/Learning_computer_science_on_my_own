@@ -179,7 +179,7 @@ unsigned int reverse_bits(unsigned int n) {
     return out;
 }
 
-##############################################################
+############################################################## [DONE]
 
 11) Each of the following macros defines the position of a single bit within an integer:
 
@@ -194,7 +194,10 @@ how to fix it. Assume that key_code is an int variable.
 if (key_code & (SHIFT_BIT | CTRL_BIT | ALT_BIT) == 0)
 printf("No modifier keys pressed\n");
 
-##############################################################
+    - answer: because of the "==" precedence before "&"
+    - fix: ((key_code & (SHIFT_BIT | CTRL_BIT | ALT_BIT)) == 0)
+
+############################################################## [DONE]
 
 12) The following function supposedly combines two bytes to form an unsigned short integer.
 Explain why the function doesn’t work and show how to fix it.
@@ -203,6 +206,14 @@ unsigned short create_short(unsigned char high_byte,
                             unsigned char low_byte) {
                                 return high_byte << 8 + low_byte;
                             }
+
+    - answer: again, the issue is with precedence ("+" is higher whan "<<", we can fix it with two ways:
+
+unsigned short create_short(unsigned char high_byte, unsigned char low_byte) {
+    
+    //return (high_byte << 8) + low_byte;
+    return high_byte << 8 | low_byte;
+}
 
 ##############################################################
 
@@ -213,6 +224,8 @@ n &= n - 1;
 
 Hint: Consider the effect on n if this statement is executed more than once.
 
+    - it always delete one "1" from right side
+
 ##############################################################
 
 14) When stored according to the IEEE floating-point standard, a float value consists of a 1-
@@ -220,6 +233,23 @@ Hint: Consider the effect on n if this statement is executed more than once.
     that order. Design a structure type that occupies 32 bits, with bit-field members correspond-
     ing to the sign, exponent, and fraction. Declare the bit-fields to have type unsigned int.
     Check the manual for your compiler to determine the order of the bit-fields.
+
+    typedef struct {
+        unsigned int fraction: 23;
+        unsigned int expon: 8;
+        unsigned int sign: 1;
+    } Float;
+    
+int main()
+{
+    Float x;
+    x.sign = 1;
+    x.expon = 0;
+    x.fraction = 0;
+    printBits(sizeof(Float), &x);
+    
+    return 0;
+}
 
 ##############################################################
 
@@ -239,6 +269,9 @@ printf("%d\n", s.flag);
 
 (b) How can this problem be avoided?
 
+    - we have bit field with int (nu unsigned int), so when ...0001 is converted to decimal, we have -1.
+    - If the flag is 2 bites and we select s.flag = 2, we got -2
+
 ##############################################################
 
 16) Starting with the 386 processor, x86 CPUs have 32-bit registers named EAX, EBX, ECX,
@@ -250,4 +283,26 @@ printf("%d\n", s.flag);
     corresponding to the other half of EAX, EBX, ECX, and EDX. Declare the type of the new
     registers to be DWORD (double word), which should be defined as unsigned long. Don’t
     forget that the x86 architecture is little-endian.
+
+typedef unsigned long DWORD 
+
+union {
+	struct {
+		DWORD EAX, EBX, ECX, EDX;
+	} dword;
+
+    struct {
+		WORD AX, EAXH;
+        WORD BX, EBXH;
+        WORD CX, ECXH;
+        WORD DX, EDXH;
+	} word;
+
+	struct {
+		BYTE AL, AH, EAXHL, EAXHH;
+		BYTE BL, BH, EBXHL, EBXHH;
+		BYTE CL, CH, ECXHL, ECXHH;
+		BYTE DL, DH, EDXHL, EDXHH;
+	} byte;
+} regs;
 ##############################################################
